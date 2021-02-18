@@ -49,8 +49,7 @@ dn: arc=1,arc=4,arc=1,arc=6,arc=3,arc=1,ou=X660,dc=example,dc=com
 objectClass: top
 objectClass: x660ArcEntry
 arc: 1
-arcAddlSecId: enterprises
-arcSecId: enterprise
+arcSecId: enterprises
 arcId: enterprise
 arcDescription: Private Enterprises
 
@@ -68,7 +67,7 @@ dn: arc=101,arc=56521,arc=1,arc=4,arc=1,arc=6,arc=3,arc=1,ou=X660,dc=example,dc=
 objectClass: top
 objectClass: x660ArcEntry
 arc: 101
-arcId: x660-ldap
+arcId: draft-coretta-x660-ldap
 arcTitle: draft-coretta-x660-ldap
 arcDescription: Models and schema definitions for the storage of Rec. ITU-T X.660 registration data in a Lightweight Directory Access Protocol (LDAP) Directory Information Tree (DIT)
 
