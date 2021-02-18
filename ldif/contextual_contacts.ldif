@@ -3,8 +3,8 @@
 ## arcDefaultContact, arcSponsorContact and arcAuthorityContact
 ## attribute types respectively.
 
-dn: arcRegId=2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0,ou=Contacts,dc=example,dc=com
-arcRegId: 2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0
+dn: arcRegId=b295b891-7b1d-4a55-b573-159c991b8e55,ou=Contacts,dc=example,dc=com
+arcRegId: b295b891-7b1d-4a55-b573-159c991b8e55
 objectClass: x660RegistrationEntry
 objectClass: top
 arcRegAuthorityPostalAddress: 123 Fake St$Anywhere$CA$99999
