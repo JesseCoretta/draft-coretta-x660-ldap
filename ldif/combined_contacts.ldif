@@ -1,0 +1,20 @@
+## This is an entry consisting of multiple contacts. This
+## entry should be referenced by the arcDefaultContact
+## DN-based attribute type.
+
+dn: arcRegId=2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0,ou=Contacts,dc=example,dc=com
+arcRegId: 2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0
+objectClass: x660RegistrationEntry
+objectClass: top
+arcRegAuthorityPostalAddress: 123 Fake St$Anywhere$CA$99999
+arcRegAuthorityCommonName: Jesse Coretta
+arcRegAuthorityEmail: jesse.coretta@example.com
+arcRegAuthorityMobile: +1 123 456 7890
+arcRegDefaultPostalAddress: 789 Fake St$Anywhere$CA$99999
+arcRegDefaultOrg: Default Contact, Co.
+arcRegDefaultEmail: default@example.com
+arcRegDefaultMobile: +1 123 456 0123
+arcRegSponsorPostalAddress: 456 Fake St$Anywhere$CA$99999
+arcRegSponsorOrg: Sponsor, Co.
+arcRegSponsorEmail: sponsor@example.com
+arcRegSponsorMobile: +1 123 456 0987
