@@ -1,0 +1,31 @@
+## This LDIF contains context-specific registration entries.
+## Each of these entries should be referenced by the DN-based
+## arcDefaultContact, arcSponsorContact and arcAuthorityContact
+## attribute types respectively.
+
+dn: arcRegId=2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0,ou=Contacts,dc=example,dc=com
+arcRegId: 2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0
+objectClass: x660RegistrationEntry
+objectClass: top
+arcRegAuthorityPostalAddress: 123 Fake St$Anywhere$CA$99999
+arcRegAuthorityCommonName: Jesse Coretta
+arcRegAuthorityEmail: jesse.coretta@example.com
+arcRegAuthorityMobile: +1 123 456 7890
+
+dn: arcRegId=a590419f-ed3e-4686-8588-81dd1d2952e3,ou=Contacts,dc=example,dc=com
+arcRegId: a590419f-ed3e-4686-8588-81dd1d2952e3
+objectClass: x660RegistrationEntry
+objectClass: top
+arcRegDefaultPostalAddress: 789 Fake St$Anywhere$CA$99999
+arcRegDefaultOrg: Default Contact, Co.
+arcRegDefaultEmail: default@example.com
+arcRegDefaultMobile: +1 123 456 0123
+
+dn: arcRegId=c108fcd9-c462-485d-88a9-0f18c7b284c2,ou=Contacts,dc=example,dc=com
+arcRegId: c108fcd9-c462-485d-88a9-0f18c7b284c2
+objectClass: x660RegistrationEntry
+objectClass: top
+arcRegSponsorPostalAddress: 456 Fake St$Anywhere$CA$99999
+arcRegSponsorOrg: Sponsor, Co.
+arcRegSponsorEmail: sponsor@example.com
+arcRegSponsorMobile: +1 123 456 0987
