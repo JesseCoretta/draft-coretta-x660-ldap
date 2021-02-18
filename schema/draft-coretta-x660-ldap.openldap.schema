@@ -1,0 +1,591 @@
+# draft-coretta-x660-ldap - Schema Definitions for OID Registration Entries
+#################################################################################
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.1
+         NAME 'arc'
+         DESC 'A single unsigned integer value assigned to an X.660 arc
+            to represent its primary integer identifier'
+         EQUALITY integerMatch
+         SINGLE-VALUE
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.2
+         NAME 'arcOID'
+         DESC 'Dotted ASN.1 Object Identifier for non-root X.660 arcs'
+         EQUALITY objectIdentifierMatch
+         SINGLE-VALUE
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.38 )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.3
+         NAME 'arcId'
+         DESC 'The primary non-numeric Unicode identifier for
+            an X.660 arc'
+         EQUALITY caseIgnoreMatch
+         SINGLE-VALUE
+         SUP name )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.4
+         NAME 'arcSecId'
+         DESC 'The non-Unicode secondary identifier for an
+            X.660 arc'
+         EQUALITY caseIgnoreMatch
+         SINGLE-VALUE
+         SUP name )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.5
+         NAME 'arcAddlSecId'
+         DESC 'The non-Unicode additional secondary identifier for an
+            X.660 arc'
+         EQUALITY caseIgnoreMatch
+         SUP name )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.6
+         NAME 'arcData'
+         DESC 'Extended information for an X.660 arc'
+         EQUALITY octetStringMatch
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.7
+         NAME 'arcAuthorityContact'
+         DESC 'LDAP Distinguished Name of an entry bearing authoritative
+            information for an X.660 arc'
+         EQUALITY distinguishedNameMatch
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.8
+         NAME 'arcSponsorContact'
+         DESC 'LDAP Distinguished Name of an entry bearing sponsorship
+            information for an X.660 arc'
+         EQUALITY distinguishedNameMatch
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.9
+        NAME 'arcDefaultContact'
+        DESC 'LDAP Distinguished Name of an entry bearing generalized
+           contact information for an X.660 arc'
+        EQUALITY distinguishedNameMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.10
+        NAME 'arcTitle'
+        DESC 'Title assigned to an X.660 arc'
+        SUP title  )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.11
+        NAME 'arcDescription'
+        DESC 'Short description of an X.660 arc'
+        SUP description )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.12
+        NAME 'arcRegId'
+        DESC 'GUID or UUID assigned to an X.660 arc registration entry'
+        SINGLE-VALUE
+        EQUALITY octetStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.13
+        NAME 'arcCreateTimestamp'
+        DESC 'Generalized timestamp for X.660 arc entry creation'
+        SINGLE-VALUE
+        EQUALITY generalizedTimeMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.14
+        NAME 'arcModifyTimestamp'
+        DESC 'Generalized timestamps for X.660 arc entry modification'
+        EQUALITY generalizedTimeMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.15
+        NAME 'arcRegAuthorityCommonName'
+        DESC 'Common Name for the authoritative contact name associated
+           with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP cn )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.16
+        NAME 'arcRegDefaultCommonName'
+        DESC 'Common Name for the default contact name associated
+           with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP cn )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.17
+        NAME 'arcRegSponsorCommonName'
+        DESC 'Common Name for the sponsorship contact name associated
+           with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP cn )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.18
+        NAME 'arcRegAuthorityCountry'
+        DESC 'Common Name for the sponsorship contact country name
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP c )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.19
+        NAME 'arcRegDefaultCountry'
+        DESC 'Common Name for the default contact country name
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP c )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.20
+        NAME 'arcRegSponsorCountry'
+        DESC 'Common Name for the default contact country name
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP c )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.21
+        NAME 'arcRegAuthorityEmail'
+        DESC 'Email address for the authoritative contact associated
+           with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP mail )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.22
+        NAME 'arcRegDefaultEmail'
+        DESC 'Email address for the default contact associated with an
+           X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP mail )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.23
+        NAME 'arcRegSponsorEmail'
+        DESC 'Email address for the sponsorship contact associated with
+           an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP mail )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.24
+        NAME 'arcRegAuthorityFax'
+        DESC 'Facsimile telephone number assigned to an authoritative
+           contact associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP facsimileTelephoneNumber )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.25
+        NAME 'arcRegDefaultFax'
+        DESC 'Facsimile telephone number assigned to a default contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP facsimileTelephoneNumber )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.26
+        NAME 'arcRegSponsorFax'
+        DESC 'Facsimile telephone number assigned to a sponsorship
+           contact associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP facsimileTelephoneNumber )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.27
+        NAME 'arcRegAuthorityFriendlyCountry'
+        DESC 'Friendly country name assigned to an authoritative contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP co )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.28
+        NAME 'arcRegDefaultFriendlyCountry'
+        DESC 'Friendly country name assigned to a default contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP co )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.29
+        NAME 'arcRegSponsorFriendlyCountry'
+        DESC 'Friendly country name assigned to a sponsorship contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP co )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.30
+        NAME 'arcRegAuthorityLocality'
+        DESC 'Locality name assigned to an authoritative contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP l )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.31
+        NAME 'arcRegDefaultLocality'
+        DESC 'Locality name assigned to a default contact associated
+           with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP l )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.32
+        NAME 'arcRegSponsorLocality'
+        DESC 'Locality name assigned to a sponsorship contact associated
+           with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP l )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.33
+        NAME 'arcRegAuthorityMobile'
+        DESC 'Mobile telephone number assigned to an authoritative
+           contact associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP mobile )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.34
+        NAME 'arcRegDefaultMobile'
+        DESC 'Mobile telephone number assigned to a default contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP mobile )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.35
+        NAME 'arcRegSponsorMobile'
+        DESC 'Mobile telephone number assigned to a sponsorship contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP mobile )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.36
+        NAME 'arcRegAuthorityOrg'
+        DESC 'Organization name assigned to an authoritative contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP o )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.37
+        NAME 'arcRegDefaultOrg'
+        DESC 'Organization name assigned to a default contact associated
+           with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP o )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.38
+        NAME 'arcRegSponsorOrg'
+        DESC 'Organization name assigned to a sponsorship contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP o )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.39
+        NAME 'arcRegAuthorityPostOfficeBox'
+        DESC 'Post office box number assigned to an authoritative
+           contact associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP postOfficeBox )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.40
+        NAME 'arcRegDefaultPostOfficeBox'
+        DESC 'Post office box number assigned to an default contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP postOfficeBox )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.41
+        NAME 'arcRegSponsorPostOfficeBox'
+        DESC 'Post office box number assigned to a sponsorship contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP postOfficeBox )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.42
+        NAME 'arcRegAuthorityPostalAddress'
+        DESC 'Postal address assigned to an authoritative contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP postalAddress )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.43
+        NAME 'arcRegDefaultPostalAddress'
+        DESC 'Postal address assigned to a default contact associated
+           with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP postalAddress )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.44
+        NAME 'arcRegSponsorPostalAddress'
+        DESC 'Postal address assigned to a sponsorship contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP postalAddress )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.45
+        NAME 'arcRegAuthorityPostalCode'
+        DESC 'Postal code assigned to an authoritative contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP postalCode )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.46
+        NAME 'arcRegDefaultPostalCode'
+        DESC 'Postal code assigned to a default contact associated with
+           an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP postalCode )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.47
+        NAME 'arcRegSponsorPostalCode'
+        DESC 'Postal code assigned to a sponsorship contact associated
+           with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP postalCode )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.48
+        NAME 'arcRegAuthorityState'
+        DESC 'State or province name assigned to an authoritative
+           contact associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP st )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.49
+        NAME 'arcRegDefaultState'
+        DESC 'State or province name assigned to a default contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP st )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.50
+        NAME 'arcRegSponsorState'
+        DESC 'State or province name assigned to a sponsorship contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP st )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.51
+        NAME 'arcRegAuthorityStreet'
+        DESC 'Street name and number assigned to an authoritative
+           contact associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP street )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.52
+        NAME 'arcRegDefaultStreet'
+        DESC 'Street name and number assigned to a default contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP street )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.53
+        NAME 'arcRegSponsorStreet'
+        DESC 'Street name and number assigned to a sponsorship contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP street )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.54
+        NAME 'arcRegAuthorityTelephone'
+        DESC 'Telephone number assigned to an authoritative contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP telephoneNumber )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.55
+        NAME 'arcRegDefaultTelephone'
+        DESC 'Telephone number assigned to a default contact associated
+           with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP telephoneNumber )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.56
+        NAME 'arcRegSponsorTelephone'
+        DESC 'Telephone number assigned to a sponsorship contact
+           associated with an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP telephoneNumber )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.57
+        NAME 'arcRegAuthorityTitle'
+        DESC 'Title assigned to an authoritative contact associated with
+           an X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP title )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.58
+        NAME 'arcRegDefaultTitle'
+        DESC 'Title assigned to a default contact associated with an
+           X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP title )
+#
+##
+#
+attributetype: ( 1.3.6.1.4.1.56521.101.2.1.59
+        NAME 'arcRegSponsorTitle'
+        DESC 'Title assigned to a sponsorship contact associated with an
+           X.660 arc registration entry'
+        SINGLE-VALUE
+        SUP title )
+#
+##
+#
+objectclass: ( 1.3.6.1.4.1.56521.101.2.2.1
+         NAME 'x660RootArcEntry'
+         DESC 'Top-level class for entries meant to represent ITU-T, ISO
+            or Joint-ISO-ITU-T root arcs as defined in Section A.2 of
+            the X.660 specification'
+         SUP top
+         STRUCTURAL
+         MUST ( arc $ arcId )
+         MAY ( arcData $ arcAuthorityContact $ arcSponsorContact $ arcDefaultContact $
+               arcSecId $ labeledURI $ arcDescription $ arcAddlSecId $ arcTitle $
+               arcCreateTimestamp $ arcModifyTimestamp ) )
+#
+##
+#
+objectclass: ( 1.3.6.1.4.1.56521.101.2.2.2
+         NAME 'x660ArcEntry'
+         DESC 'A generalized class meant to represent subordinate arcs
+            beneath any root, as defined in X.660 Sections A.3-A.5'
+         SUP top
+         STRUCTURAL
+         MUST ( arc )
+         MAY ( arcAddlSecId $ arcData $ arcOID $ arcSecId $ arcId $
+               arcAuthorityContact $ arcSponsorContact $ arcDefaultContact $
+               labeledURI $ arcDescription $ arcTitle $ arcCreateTimestamp $
+               arcModifyTimestamp ) )
+#
+##
+#
+objectclass: ( 1.3.6.1.4.1.56521.101.2.2.3
+         NAME 'x660RegistrationEntry'
+         DESC 'A generalized auxiliary class for X.660 arc registration
+            contact, sponsor and/or authority information'
+         SUP top
+         AUXILIARY
+         MAY ( arcRegAuthorityPostalAddress $ arcRegAuthorityState $
+               arcRegDefaultPostalAddress $ arcRegDefaultState $
+               arcRegSponsorPostalAddress $ arcRegSponsorState $
+               arcRegAuthorityFriendlyCountry $ arcRegAuthorityFax $
+               arcRegDefaultFriendlyCountry $ arcRegDefaultFax $
+               arcRegSponsorFriendlyCountry $ arcRegSponsorFax $
+               arcRegAuthorityPostOfficeBox $ arcRegAuthorityCountry $
+               arcRegDefaultPostOfficeBox $ arcRegDefaultCountry $
+               arcRegSponsorPostOfficeBox $ arcRegSponsorCountry $
+               arcRegAuthorityCommonName $ arcRegAuthorityPostalCode $
+               arcRegDefaultCommonName $ arcRegDefaultPostalCode $
+               arcRegSponsorCommonName $ arcRegSponsorPostalCode $
+               arcRegAuthorityTelephone $ arcRegAuthorityLocality $
+               arcRegDefaultTelephone $ arcRegDefaultLocality $
+               arcRegSponsorTelephone $ arcRegSponsorLocality $
+               arcRegAuthorityMobile $ arcRegAuthorityStreet $
+               arcRegDefaultMobile $ arcRegDefaultStreet $
+               arcRegSponsorMobile $ arcRegSponsorStreet $
+               arcRegAuthorityEmail $ arcRegAuthorityTitle $
+               arcRegDefaultEmail $ arcRegDefaultTitle $
+               arcRegSponsorEmail $ arcRegSponsorTitle $
+               arcRegAuthorityOrg $ arcRegDefaultOrg $
+               arcRegSponsorOrg $ arcRegId ) )
+#
+##
+#
