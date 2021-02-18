@@ -6,7 +6,7 @@ This draft describes a means for storing any OID in existence, along with OID re
 
 Current document version is `04`.
 
-THIS IS A WORK IN PROGRESS.
+__!! THIS IS A WORK IN PROGRESS !!__
 
 # What is in this repo?
 
