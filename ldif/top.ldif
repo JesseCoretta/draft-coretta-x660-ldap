@@ -1,0 +1,24 @@
+## This file defines the top of the demonstration
+## DIT. This allows subsequent storage of actual
+## arc and contact entries, either in 2D or 3D.
+
+## Our demonstration root suffix
+dn: dc=example,dc=com
+objectClass: domain
+objectClass: top
+dc: example
+
+## For storage of actual arc definition
+## entries.
+dn: ou=X660,dc=example,dc=com
+ou: X660
+objectClass: organizationalUnit
+objectClass: top
+
+## For storage of independent contact,
+## authority and sponsor registration
+## entries. Optional.
+dn: ou=Contacts,dc=example,dc=com
+ou: Contacts
+objectClass: organizationalUnit
+objectClass: top
