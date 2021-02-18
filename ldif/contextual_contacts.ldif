@@ -1,4 +1,4 @@
-## This LDIF contains context-specific registration entries.
+## This LDIF contains context-specific registration contacts.
 ## Each of these entries should be referenced by the DN-based
 ## arcDefaultContact, arcSponsorContact and arcAuthorityContact
 ## attribute types respectively.
