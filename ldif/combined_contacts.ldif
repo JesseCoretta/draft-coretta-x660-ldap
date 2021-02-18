@@ -4,7 +4,7 @@
 
 dn: arcRegId=2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0,ou=Contacts,dc=example,dc=com
 arcRegId: 2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0
-objectClass: x660RegistrationEntry
+objectClass: x660ContactEntry
 objectClass: top
 arcRegAuthorityPostalAddress: 123 Fake St$Anywhere$CA$99999
 arcRegAuthorityCommonName: Jesse Coretta
