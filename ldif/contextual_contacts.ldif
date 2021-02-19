@@ -4,7 +4,9 @@
 ## attribute types respectively.
 
 dn: arcRegId=b295b891-7b1d-4a55-b573-159c991b8e55,ou=Contacts,dc=example,dc=com
+cn: b295b891-7b1d-4a55-b573-159c991b8e55
 arcRegId: b295b891-7b1d-4a55-b573-159c991b8e55
+objectClass: organizationalRole
 objectClass: x660ContactEntry
 objectClass: top
 arcRegAuthorityPostalAddress: 123 Fake St$Anywhere$CA$99999
@@ -13,7 +15,9 @@ arcRegAuthorityEmail: jesse.coretta@example.com
 arcRegAuthorityMobile: +1 123 456 7890
 
 dn: arcRegId=a590419f-ed3e-4686-8588-81dd1d2952e3,ou=Contacts,dc=example,dc=com
+cn: a590419f-ed3e-4686-8588-81dd1d2952e3
 arcRegId: a590419f-ed3e-4686-8588-81dd1d2952e3
+objectClass: organizationalRole
 objectClass: x660ContactEntry
 objectClass: top
 arcRegDefaultPostalAddress: 789 Fake St$Anywhere$CA$99999
@@ -22,7 +26,9 @@ arcRegDefaultEmail: default@example.com
 arcRegDefaultMobile: +1 123 456 0123
 
 dn: arcRegId=c108fcd9-c462-485d-88a9-0f18c7b284c2,ou=Contacts,dc=example,dc=com
+cn: c108fcd9-c462-485d-88a9-0f18c7b284c2
 arcRegId: c108fcd9-c462-485d-88a9-0f18c7b284c2
+objectClass: organizationalRole
 objectClass: x660ContactEntry
 objectClass: top
 arcRegSponsorPostalAddress: 456 Fake St$Anywhere$CA$99999
