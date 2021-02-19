@@ -3,7 +3,9 @@
 ## DN-based attribute type.
 
 dn: arcRegId=2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0,ou=Contacts,dc=example,dc=com
+cn: 2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0
 arcRegId: 2c68fc8a-ddec-45fd-9cd9-6a4f4382aee0
+objectClass: organizationalRole
 objectClass: x660ContactEntry
 objectClass: top
 arcRegAuthorityPostalAddress: 123 Fake St$Anywhere$CA$99999
