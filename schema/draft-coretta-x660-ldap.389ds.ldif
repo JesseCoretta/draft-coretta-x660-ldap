@@ -1,7 +1,35 @@
-# draft-coretta-x660-ldap - Schema Definitions for OID Registration Entries
-#################################################################################
+#
+# DRAFT version of X.660 LDAP Schema
+# Author: Jesse Coretta
+# Version: 5 (March 9, 2021)
+# URL: https://datatracker.ietf.org/doc/draft-coretta-x660-ldap/
+#
+# !! This specification is a WORK IN PROGRESS !!
+#
+# OID Tree:
+#
+# 1.3.6.1.4.1.56521 (Jesse Coretta)
+#               \
+#                101 (x660-ldap)
+#                  \
+#                   2 (schema)
+#                    \
+#                     1 (at)
+#                     |
+#                     2 (oc)
 #
 dn: cn=schema
+#
+##################
+## Attribute Types
+##################
+#
+# 2.1.1.  'arc'
+#
+#   The 'arc' attribute type allows the storage of an unsigned integer
+#   that is meant to represent the primary identifier for an arc
+#   registration.
+#
 attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.1
          NAME 'arc'
          DESC 'A single unsigned integer value assigned to an X.660 arc
@@ -10,7 +38,13 @@ attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.1
          SINGLE-VALUE
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 )
 #
-##
+# 2.1.2.  'arcOID'
+#
+#   The 'arcOID' attribute type allows the storage of an arc's OID
+#   value [X.680] in dot-delimited form.
+#
+#   Please note this attribute type is only required in two-dimensional
+#   directory model implementations of this specification.
 #
 attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.2
          NAME 'arcOID'
@@ -19,516 +53,931 @@ attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.2
          SINGLE-VALUE
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.38 )
 #
-##
+# 2.1.3.  'arcIRI'
+#
+#   The 'arcIRI' attribute type allows the storage of an arc's IRI.
+#
+#   Please note this attribute type is only required in two-dimensional
+#   directory model implementations of this specification, or if clients
+#   will not automatically discover a given IRI value by traversal.
 #
 attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.3
+         NAME 'arcIRI'
+         DESC 'Internationalized Resource Identifier for an X.660 arc'
+         SINGLE-VALUE
+         EQUALITY octetStringMatch
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
+#
+# 2.1.4.  'arcASN1'
+#   The 'arcASN1' attribute type allows the storage of an arc's ASN.1
+#   identifier.
+#
+#   Please note this attribute type is only required in two-dimensional
+#   directory model implementations of this specification, or if clients
+#   will not automatically discover a given ASN.1 value by traversal.
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.4
+         NAME 'arcASN1'
+         DESC 'ASN.1 identifier for an X.660 arc'
+         SINGLE-VALUE
+         EQUALITY caseIgnoreMatch
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+#
+# 2.1.5.  'arcId'
+#   The 'arcId' attribute type allows the storage of the primary
+#   identifier Unicode value (non-numeric) [X.660] in an arc registration
+#   entry.
+#
+#   This attribute type is derived from 'name', as defined in Section
+#   2.18 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.5
          NAME 'arcId'
          DESC 'The primary non-numeric Unicode identifier for
             an X.660 arc'
-         EQUALITY caseIgnoreMatch
          SINGLE-VALUE
          SUP name )
 #
-##
+# 2.1.6.  'arcSecId'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.4
+#   The 'arcSecId' attribute type allows the storage of an arc
+#   registration entry's non-Unicode, non-numeric secondary identifier
+#   [X.660].
+#
+#   This attribute type is derived from 'name', as defined in Section
+#   2.18 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.6
          NAME 'arcSecId'
          DESC 'The non-Unicode secondary identifier for an
             X.660 arc'
-         EQUALITY caseIgnoreMatch
          SINGLE-VALUE
          SUP name )
 #
-##
+# 2.1.7.  'arcAddlSecId'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.5
+#   The 'arcAddlSecId' attribute type allows the OPTIONAL storage of
+#   one or more additional secondary identifiers [X.660] in an arc
+#   registration entry.
+#
+#   This attribute type is derived from 'name', as defined in Section
+#   2.18 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.7
          NAME 'arcAddlSecId'
          DESC 'The non-Unicode additional secondary identifier for an
             X.660 arc'
-         EQUALITY caseIgnoreMatch
          SUP name )
 #
-##
+# 2.1.8.  'arcLongId'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.6
+#   The 'arcLongId' attribute type allows the storage of the so-called
+#   "Long Arc" well-known identifier.  Per [X.660], entries that bear
+#   this attribute type MUST reside below the root Joint-ISO-ITU-T (2)
+#   arc.
+#
+#   This attribute type is derived from 'name', as defined in Section
+#   2.18 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.8
+         NAME 'arcLongId'
+         DESC 'The well-known Long Arc name associated with, and
+            registered to, a Joint-ISO-ITU-T subordinate X.660 arc'
+         SINGLE-VALUE
+         SUP name )
+#
+# 2.1.9.  'arcData'
+#
+#   The 'arcData' attribute type allows the OPTIONAL storage of octet
+#   based values intended meant for extended documentation or notes in
+#   an arc registration entry.
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.9
          NAME 'arcData'
          DESC 'Extended information for an X.660 arc'
          EQUALITY octetStringMatch
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
 #
-##
+# 2.1.10.  'arcAuthorityContact'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.7
+#   The 'arcAuthorityContact' attribute type allows a DN value that
+#   references an entry containing arc registration authority contact
+#   information.
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.10
          NAME 'arcAuthorityContact'
          DESC 'LDAP Distinguished Name of an entry bearing authoritative
             information for an X.660 arc'
          EQUALITY distinguishedNameMatch
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
 #
-##
+# 2.1.11.  'arcSponsorContact'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.8
+#   The 'arcSponsorContact' attribute type allows a DN value that
+#   references an entry containing arc registration sponsorship contact
+#   information.
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.11
          NAME 'arcSponsorContact'
          DESC 'LDAP Distinguished Name of an entry bearing sponsorship
             information for an X.660 arc'
          EQUALITY distinguishedNameMatch
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
 #
-##
+# 2.1.12.  'arcDefaultContact'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.9
+#   The 'arcDefaultContact' attribute type allows a DN value that
+#   references an entry containing default arc registration contact
+#   information.
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.12
         NAME 'arcDefaultContact'
         DESC 'LDAP Distinguished Name of an entry bearing generalized
            contact information for an X.660 arc'
         EQUALITY distinguishedNameMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
 #
-##
+# 2.1.13.  'arcTitle'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.10
+#   The 'arcTitle' attribute type allows for an official title to be set
+#   for an arc registration entry.
+#
+#   This attribute type is derived from 'title', as defined in Section
+#   2.38 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.13
         NAME 'arcTitle'
         DESC 'Title assigned to an X.660 arc'
-        SUP title  )
+        SUP title )
 #
-##
+# 2.1.14.  'arcDescription'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.11
-        NAME 'arcDescription'
+#   The 'arcDescription' attribute type allows for a short description of
+#   an arc registration entry.
+#
+#   This attribute type is derived from 'description', as defined in
+#   Section 2.5 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.14        NAME 'arcDescription'
         DESC 'Short description of an X.660 arc'
         SUP description )
 #
-##
+# 2.1.15.  'arcRegId'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.12
+#   The 'arcRegId' attribute type is intended to allow the singular
+#   assignment of a UUID or GUID to a contact, sponsor or authority
+#   registration entry.  When used, this value would act as an absolute
+#   identifier for registration entries that may change in the future.
+#
+#   In larger, more complete implementations of this specification, it
+#   is RECOMMENDED that this attribute type be the primary identifier
+#   (or, RDN) for a registration entry that contains contact, sponsor
+#   and/or authority information.  This allows absolute and unambiguous
+#   reference to any registration entry by DN.
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.15
         NAME 'arcRegId'
-        DESC 'GUID or UUID assigned to an X.660 arc registration entry'
+        DESC 'GUID or UUID assigned to an X.660 arc contact entry'
         SINGLE-VALUE
         EQUALITY octetStringMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
 #
-##
+#   Please note the intended use of this attribute type SHOULD NOT be
+#   confused with the act of numbering an arc using the numerical form
+#   of a GUID or UUID value, such as:
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.13
+#      2.25.483275873209587983492589328598493854833
+#
+#   Such an act can be achieved through standard use of the arc attribute
+#   type (defined in Section 2.1.1) as it allows an integer value of
+#   suitable size to accommodate such a value.
+#
+# 2.1.16.  'arcCreateTimestamp'
+#
+#   The 'arcCreateTimestamp' attribute type allows for the assignment of
+#   a generalized timestamp indicating the date and time at which an arc
+#   registration entry was created.
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.16
         NAME 'arcCreateTimestamp'
         DESC 'Generalized timestamp for X.660 arc entry creation'
         SINGLE-VALUE
         EQUALITY generalizedTimeMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
 #
-##
+# 2.1.17.  'arcModifyTimestamp'
+#   The 'arcModifyTimestamp' attribute type allows for the assignment of
+#   one or more generalized timestamps indicating the dates and times of
+#   all applied updates to the arc registration entry.
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.14
+#   Whether multiple dates, or only most recent date, are stored is
+#   entirely up to the directory architect(s) involved.
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.17
         NAME 'arcModifyTimestamp'
         DESC 'Generalized timestamps for X.660 arc entry modification'
         EQUALITY generalizedTimeMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
 #
-##
+# 2.1.18.  'arcRegAuthorityCommonName'
+#   The 'arcRegAuthorityCommonName' attribute type allows for a common
+#   name to be assigned to an arc registration entry, meant to represent
+#   the name of an authoritative contact, typically an individual.
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.15
+#   This attribute type is derived from 'cn', as defined in Section 2.3
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.18
         NAME 'arcRegAuthorityCommonName'
         DESC 'Common Name for the authoritative contact name associated
            with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP cn )
 #
-##
+# 2.1.19.  'arcRegDefaultCommonName'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.16
+#   The 'arcRegDefaultCommonName' attribute type allows for a common name
+#   to be assigned to an arc registration entry, meant to represent the
+#   name of a default contact, typically an individual.
+#
+#   This attribute type is derived from 'cn', as defined in Section 2.3
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.19
         NAME 'arcRegDefaultCommonName'
         DESC 'Common Name for the default contact name associated
            with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP cn )
 #
-##
+# 2.1.20.  'arcRegSponsorCommonName'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.17
+#   The 'arcRegSponsorCommonName' attribute type allows for a common name
+#   to be assigned to an arc registration entry, meant to represent the
+#   name of a sponsorship contact, typically an individual.
+#
+#   This attribute type is derived from 'cn', as defined in Section 2.3
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.20
         NAME 'arcRegSponsorCommonName'
         DESC 'Common Name for the sponsorship contact name associated
            with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP cn )
 #
-##
+# 2.1.21.  'arcRegAuthorityCountry'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.18
+#   The 'arcRegAuthorityCountry' attribute type allows for a country code
+#   to be assigned to an arc registration entry, meant to represent the
+#   country in which an authoritative contact resides.
+#
+#   This attribute type is derived from 'c', as defined in Section 2.2
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.21
         NAME 'arcRegAuthorityCountry'
         DESC 'Common Name for the sponsorship contact country name
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP c )
 #
-##
+# 2.1.22.  'arcRegDefaultCountry'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.19
+#   The 'arcRegDefaultCountry' attribute type allows for a country code
+#   to be assigned to an arc registration entry, meant to represent the
+#   country in which a default contact resides.
+#
+#   This attribute type is derived from 'c', as defined in Section 2.2
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.22
         NAME 'arcRegDefaultCountry'
         DESC 'Common Name for the default contact country name
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP c )
 #
-##
+# 2.1.23.  'arcRegSponsorCountry'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.20
+#   The 'arcRegSponsorCountry' attribute type allows for a country code
+#   to be assigned to an arc registration entry, meant to represent the
+#   country in which a sponsorship contact resides.
+#
+#   This attribute type is derived from 'c', as defined in Section 2.2
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.23
         NAME 'arcRegSponsorCountry'
         DESC 'Common Name for the default contact country name
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP c )
 #
-##
+# 2.1.24.  'arcRegAuthorityEmail'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.21
+#   The 'arcRegAuthorityEmail' attribute type allows for an email address
+#   to be assigned to an arc registration entry, meant to be associated
+#   with an authoritative contact.
+#
+#   This attribute type is derived from 'mail', as defined in Section
+#   2.16 of [RFC4524].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.24
         NAME 'arcRegAuthorityEmail'
         DESC 'Email address for the authoritative contact associated
            with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP mail )
 #
-##
+# 2.1.25.  'arcRegDefaultEmail'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.22
+#   The 'arcRegDefaultEmail' attribute type allows for an email address
+#   to be assigned to an arc registration entry, meant to be associated
+#   with a default contact.
+#
+#   This attribute type is derived from 'mail', as defined in Section
+#   2.16 of [RFC4524].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.25
         NAME 'arcRegDefaultEmail'
         DESC 'Email address for the default contact associated with an
            X.660 arc registration entry'
         SINGLE-VALUE
         SUP mail )
 #
-##
+# 2.1.26.  'arcRegSponsorEmail'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.23
+#   The 'arcRegSponsorEmail' attribute type allows for an email address
+#   to be assigned to an arc registration entry, meant to be associated
+#   with a sponsorship contact.
+#
+#   This attribute type is derived from 'mail', as defined in Section
+#   2.16 of [RFC4524].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.26
         NAME 'arcRegSponsorEmail'
         DESC 'Email address for the sponsorship contact associated with
            an X.660 arc registration entry'
         SINGLE-VALUE
         SUP mail )
 #
-##
+# 2.1.27.  'arcRegAuthorityFax'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.24
+#   The 'arcRegAuthorityFax' attribute type allows for an email address
+#   to be assigned to an arc registration entry, meant to be associated
+#   with an authoritative contact.
+#
+#   This attribute type is derived from 'facsimileTelephoneNumber', as
+#   defined in Section 2.10 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.27
         NAME 'arcRegAuthorityFax'
         DESC 'Facsimile telephone number assigned to an authoritative
            contact associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP facsimileTelephoneNumber )
 #
-##
+# 2.1.28.  'arcRegDefaultFax'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.25
+#   The 'arcRegDefaultFax' attribute type allows for an email address
+#   to be assigned to an arc registration entry, meant to be associated
+#   with a default contact.
+#
+#   This attribute type is derived from 'facsimileTelephoneNumber', as
+#   defined in Section 2.10 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.28
         NAME 'arcRegDefaultFax'
         DESC 'Facsimile telephone number assigned to a default contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP facsimileTelephoneNumber )
 #
-##
+# 2.1.29.  'arcRegSponsorFax'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.26
+#   The 'arcRegSponsorFax' attribute type allows for an email address
+#   to be assigned to an arc registration entry, meant to be associated
+#   with a sponsorship contact.
+#
+#   This attribute type is derived from 'facsimileTelephoneNumber', as
+#   defined in Section 2.10 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.29
         NAME 'arcRegSponsorFax'
         DESC 'Facsimile telephone number assigned to a sponsorship
            contact associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP facsimileTelephoneNumber )
 #
-##
+# 2.1.30.  'arcRegAuthorityFriendlyCountry'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.27
+#   The 'arcRegAuthorityFriendlyCountry' attribute type allows for a
+#   so-called friendly country name to be assigned to an authoritative
+#   contact.
+#
+#   This attribute type is derived from 'co', as defined in Section 2.4
+#   of [RFC4524].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.30
         NAME 'arcRegAuthorityFriendlyCountry'
         DESC 'Friendly country name assigned to an authoritative contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP co )
 #
-##
+# 2.1.31.  'arcRegDefaultFriendlyCountry'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.28
+#   The 'arcRegDefaultFriendlyCountry' attribute type allows for a
+#   so-called friendly country name to be assigned to a default contact.
+#
+#   This attribute type is derived from 'co', as defined in Section 2.4
+#   of [RFC4524].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.31
         NAME 'arcRegDefaultFriendlyCountry'
         DESC 'Friendly country name assigned to a default contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP co )
 #
-##
+# 2.1.32.  'arcRegSponsorFriendlyCountry'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.29
+#   The 'arcRegSponsorFriendlyCountry' attribute type allows for a
+#   so-called friendly country name to be assigned to a sponsorship
+#   registration contact.
+#
+#   This attribute type is derived from 'co', as defined in Section 2.4
+#   of [RFC4524].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.32
         NAME 'arcRegSponsorFriendlyCountry'
         DESC 'Friendly country name assigned to a sponsorship contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP co )
 #
-##
+# 2.1.33.  'arcRegAuthorityLocality'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.30
+#   The 'arcRegAuthorityLocality' attribute type allows for a locality
+#   name to be assigned to an authoritative contact.
+#
+#   This attribute type is derived from 'l', as defined in Section 2.16
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.33
         NAME 'arcRegAuthorityLocality'
         DESC 'Locality name assigned to an authoritative contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP l )
 #
-##
+# 2.1.34.  'arcRegDefaultLocality'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.31
+#   The 'arcRegDefaultLocality' attribute type allows for a locality
+#   name to be assigned to a default contact.
+#
+#   This attribute type is derived from 'l', as defined in Section 2.16
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.34
         NAME 'arcRegDefaultLocality'
         DESC 'Locality name assigned to a default contact associated
            with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP l )
 #
-##
+# 2.1.35.  'arcRegSponsorLocality'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.32
+#   The 'arcRegSponsorLocality' attribute type allows for a locality
+#   name to be assigned to a sponsorship contact.
+#
+#   This attribute type is derived from 'l', as defined in Section 2.16
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.35
         NAME 'arcRegSponsorLocality'
         DESC 'Locality name assigned to a sponsorship contact associated
            with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP l )
 #
-##
+# 2.1.36.  'arcRegAuthorityMobile'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.33
+#   The 'arcRegAuthorityMobile' attribute type allows for a mobile
+#   telephone number to be assigned to an authoritative contact.
+#
+#   This attribute type is derived from 'mobile', as defined in Section
+#   2.18 of [RFC4524].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.36
         NAME 'arcRegAuthorityMobile'
         DESC 'Mobile telephone number assigned to an authoritative
            contact associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP mobile )
 #
-##
+# 2.1.37.  'arcRegDefaultMobile'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.34
+#   The 'arcRegDefaultMobile' attribute type allows for a mobile
+#   telephone number to be assigned to a default contact.
+#
+#   This attribute type is derived from 'mobile', as defined in Section
+#   2.18 of [RFC4524].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.37
         NAME 'arcRegDefaultMobile'
         DESC 'Mobile telephone number assigned to a default contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP mobile )
 #
-##
+# 2.1.38.  'arcRegSponsorMobile'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.35
+#   The 'arcRegSponsorMobile' attribute type allows for a mobile
+#   telephone number to be assigned to a sponsorship contact.
+#
+#   This attribute type is derived from 'mobile', as defined in Section
+#   2.18 of [RFC4524].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.38
         NAME 'arcRegSponsorMobile'
         DESC 'Mobile telephone number assigned to a sponsorship contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP mobile )
 #
-##
+# 2.1.39.  'arcRegAuthorityOrg'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.36
+#   The 'arcRegAuthorityOrg' attribute type allows for an organization
+#   name associated with an authoritative contact.
+#
+#   This attribute type is derived from 'o', as defined in Section 2.19
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.39
         NAME 'arcRegAuthorityOrg'
         DESC 'Organization name assigned to an authoritative contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP o )
 #
-##
+# 2.1.40.  'arcRegDefaultOrg'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.37
+#   The 'arcRegDefaultOrg' attribute type allows for an organization name
+#   associated with a default contact.
+#
+#   This attribute type is derived from 'o', as defined in Section 2.19
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.40
         NAME 'arcRegDefaultOrg'
         DESC 'Organization name assigned to a default contact associated
            with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP o )
 #
-##
+# 2.1.41.  'arcRegSponsorOrg'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.38
+#   The 'arcRegSponsorOrg' attribute type allows for an organization name
+#   associated with a sponsorship contact.
+#
+#   This attribute type is derived from 'o', as defined in Section 2.19
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.41
         NAME 'arcRegSponsorOrg'
         DESC 'Organization name assigned to a sponsorship contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP o )
 #
-##
+# 2.1.42.  'arcRegAuthorityPostOfficeBox'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.39
+#   The 'arcRegAuthorityPostOfficeBox' attribute type allows for a post
+#   office box number to be assigned to an authoritative contact.
+#
+#   This attribute type is derived from 'postOfficeBox', as defined in
+#   Section 2.25 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.42
         NAME 'arcRegAuthorityPostOfficeBox'
         DESC 'Post office box number assigned to an authoritative
            contact associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP postOfficeBox )
 #
-##
+# 2.1.43.  'arcRegDefaultPostOfficeBox'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.40
+#   The 'arcRegDefaultPostOfficeBox' attribute type allows for a post
+#   office box number to be assigned to a default contact.
+#
+#   This attribute type is derived from 'postOfficeBox', as defined in
+#   Section 2.25 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.43
         NAME 'arcRegDefaultPostOfficeBox'
         DESC 'Post office box number assigned to an default contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP postOfficeBox )
 #
-##
+# 2.1.44.  'arcRegSponsorPostOfficeBox'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.41
+#   The 'arcRegSponsorPostOfficeBox' attribute type allows for a post
+#   office box number to be assigned to a sponsorship contact.
+#
+#   This attribute type is derived from 'postOfficeBox', as defined in
+#   Section 2.25 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.44
         NAME 'arcRegSponsorPostOfficeBox'
         DESC 'Post office box number assigned to a sponsorship contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP postOfficeBox )
 #
-##4
+# 2.1.45.  'arcRegAuthorityPostalAddress'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.42
+#   The 'arcRegAuthorityPostalAddress' attribute type allows for a full
+#   postal address to be assigned to an authoritative contact.
+#
+#   This attribute type is derived from 'postalAddress', as defined in
+#   Section 2.23 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.45
         NAME 'arcRegAuthorityPostalAddress'
         DESC 'Postal address assigned to an authoritative contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP postalAddress )
 #
-##
+# 2.1.46.  'arcRegDefaultPostalAddress'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.43
+#   The 'arcRegDefaultPostalAddress' attribute type allows for a full
+#   postal address to be assigned to a default contact.
+#
+#   This attribute type is derived from 'postalAddress', as defined in
+#   Section 2.23 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.46
         NAME 'arcRegDefaultPostalAddress'
         DESC 'Postal address assigned to a default contact associated
            with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP postalAddress )
 #
-##
+# 2.1.47.  'arcRegSponsorPostalAddress'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.44
+#   The 'arcRegSponsorPostalAddress' attribute type allows for a full
+#   postal address to be assigned to a sponsorship contact.
+#
+#   This attribute type is derived from 'postalAddress', as defined in
+#   Section 2.23 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.47
         NAME 'arcRegSponsorPostalAddress'
         DESC 'Postal address assigned to a sponsorship contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP postalAddress )
 #
-##
+# 2.1.48.  'arcRegAuthorityPostalCode'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.45
+#   The 'arcRegAuthorityPostalCode' attribute type allows for a postal
+#   code to be assigned to an authoritative contact.
+#
+#   This attribute type is derived from 'postalCode', as defined in
+#   Section 2.23 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.48
         NAME 'arcRegAuthorityPostalCode'
         DESC 'Postal code assigned to an authoritative contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP postalCode )
 #
-##
+# 2.1.49.  'arcRegDefaultPostalCode'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.46
+#   The 'arcRegDefaultPostalCode' attribute type allows for a postal code
+#   to be assigned to a default contact.
+#
+#   This attribute type is derived from 'postalCode', as defined in
+#   Section 2.23 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.49
         NAME 'arcRegDefaultPostalCode'
         DESC 'Postal code assigned to a default contact associated with
            an X.660 arc registration entry'
         SINGLE-VALUE
         SUP postalCode )
 #
-##
+# 2.1.50.  'arcRegSponsorPostalCode'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.47
+#   The 'arcRegSponsorPostalCode' attribute type allows for a postal code
+#   to be assigned to a sponsorship contact.
+#
+#   This attribute type is derived from 'postalCode', as defined in
+#   Section 2.23 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.50
         NAME 'arcRegSponsorPostalCode'
         DESC 'Postal code assigned to a sponsorship contact associated
            with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP postalCode )
 #
-##
+# 2.1.51.  'arcRegAuthorityState'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.48
+#   The 'arcRegAuthorityState' attribute type allows for a state or
+#   province name to be assigned to an authoritative contact.
+#
+#   This attribute type is derived from 'st', as defined in Section 2.33
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.51
         NAME 'arcRegAuthorityState'
         DESC 'State or province name assigned to an authoritative
            contact associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP st )
 #
-##
+# 2.1.52.  'arcRegDefaultState'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.49
+#   The 'arcRegDefaultState' attribute type allows for a state or
+#   province name to be assigned to a default contact.
+#
+#   This attribute type is derived from 'st', as defined in Section 2.33
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.52
         NAME 'arcRegDefaultState'
         DESC 'State or province name assigned to a default contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP st )
 #
-##
+# 2.1.53.  'arcRegSponsorState'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.50
+#   The 'arcRegSponsorState' attribute type allows for a state or
+#   province name to be assigned to a sponsorship contact.
+#
+#   This attribute type is derived from 'st', as defined in Section 2.33
+#   of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.53
         NAME 'arcRegSponsorState'
         DESC 'State or province name assigned to a sponsorship contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP st )
 #
-##
+# 2.1.54.  'arcRegAuthorityStreet'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.51
+#   The 'arcRegAuthorityStreet' attribute type allows for a street name
+#   and number to be assigned to an authoritative contact.
+#
+#   This attribute type is derived from 'street', as defined in Section
+#   2.34 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.54
         NAME 'arcRegAuthorityStreet'
         DESC 'Street name and number assigned to an authoritative
            contact associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP street )
 #
-##
+# 2.1.55.  'arcRegDefaultStreet'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.52
+#   The 'arcRegDefaultStreet' attribute type allows for a street name and
+#   number to be assigned to a default contact.
+#
+#   This attribute type is derived from 'street', as defined in Section
+#   2.34 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.55
         NAME 'arcRegDefaultStreet'
         DESC 'Street name and number assigned to a default contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP street )
 #
-##
+# 2.1.56.  'arcRegSponsorStreet'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.53
+#   The 'arcRegSponsorStreet' attribute type allows for a street name and
+#   number to be assigned to a sponsorship contact.
+#
+#   This attribute type is derived from 'street', as defined in Section
+#   2.34 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.56
         NAME 'arcRegSponsorStreet'
         DESC 'Street name and number assigned to a sponsorship contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP street )
 #
-##
+# 2.1.57.  'arcRegAuthorityTelephone'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.54
+#   The 'arcRegAuthorityTelephone' attribute type allows for a telephone
+#   number to be assigned to an authoritative contact.
+#
+#   This attribute type is derived from 'telephoneNumber', as defined in
+#   Section 2.35 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.57
         NAME 'arcRegAuthorityTelephone'
         DESC 'Telephone number assigned to an authoritative contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP telephoneNumber )
 #
-##
+# 2.1.58.  'arcRegDefaultTelephone'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.55
+#   The 'arcRegDefaultTelephone' attribute type allows for a telephone
+#   number to be assigned to a default contact.
+#
+#   This attribute type is derived from 'telephoneNumber', as defined in
+#   Section 2.35 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.58
         NAME 'arcRegDefaultTelephone'
         DESC 'Telephone number assigned to a default contact associated
            with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP telephoneNumber )
 #
-##
+# 2.1.59.  'arcRegSponsorTelephone'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.56
+#   The 'arcRegSponsorTelephone' attribute type allows for a telephone
+#   number to be assigned to a sponsorship contact.
+#
+#   This attribute type is derived from 'telephoneNumber', as defined in
+#   Section 2.35 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.59
         NAME 'arcRegSponsorTelephone'
         DESC 'Telephone number assigned to a sponsorship contact
            associated with an X.660 arc registration entry'
         SINGLE-VALUE
         SUP telephoneNumber )
 #
-##
+# 2.1.60.  'arcRegAuthorityTitle'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.57
+#   The 'arcRegAuthorityTitle' attribute type allows for an official or
+#   professional title to be assigned to an authoritative contact,
+#   typically an individual.
+#
+#   This attribute type is derived from 'title', as defined in Section
+#   2.38 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.60
         NAME 'arcRegAuthorityTitle'
         DESC 'Title assigned to an authoritative contact associated with
            an X.660 arc registration entry'
         SINGLE-VALUE
         SUP title )
 #
-##
+# 2.1.61.  'arcRegDefaultTitle'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.58
+#   The 'arcRegDefaultTitle' attribute type allows for an official or
+#   professional title to be assigned to a default contact, typically
+#   an individual.
+#
+#   This attribute type is derived from 'title', as defined in Section
+#   2.38 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.61
         NAME 'arcRegDefaultTitle'
         DESC 'Title assigned to a default contact associated with an
            X.660 arc registration entry'
         SINGLE-VALUE
         SUP title )
 #
-##
+# 2.1.62.  'arcRegSponsorTitle'
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.59
+#   The 'arcRegSponsorTitle' attribute type allows for an official or
+#   professional title to be assigned to a sponsorship contact, typically
+#   an individual.
+#
+#   This attribute type is derived from 'title', as defined in Section
+#   2.38 of [RFC4519].
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.62
         NAME 'arcRegSponsorTitle'
-        DESC 'Title assigned to a sponsorship contact associated with an
-           X.660 arc registration entry'
+        DESC 'Title assigned to a sponsorship contact associated with
+           an X.660 arc registration entry'
         SINGLE-VALUE
         SUP title )
 #
-##
+#################
+## Object Classes
+#################
+#
+# 2.2.1.  'x660RootArcEntry'
+#
+#   The 'x660RootArcEntry' class is meant to define a maximum of three
+#   (3) root arcs within a DIT, per Rec. ITU-T X.660 (ISO/IEC 9834-1).
 #
 objectClasses: ( 1.3.6.1.4.1.56521.101.2.2.1
          NAME 'x660RootArcEntry'
@@ -538,11 +987,15 @@ objectClasses: ( 1.3.6.1.4.1.56521.101.2.2.1
          SUP top
          STRUCTURAL
          MUST ( arc $ arcId )
-         MAY ( arcData $ arcAuthorityContact $ arcSponsorContact $ arcDefaultContact $
-               arcSecId $ labeledURI $ arcDescription $ arcAddlSecId $ arcTitle $
-               arcCreateTimestamp $ arcModifyTimestamp ) )
+         MAY ( arcData $ arcAuthorityContact $ arcSponsorContact $
+               arcDefaultContact $ arcSecId $ labeledURI $ arcTitle $
+               arcDescription $ arcAddlSecId $ arcCreateTimestamp $
+               arcModifyTimestamp $ arcIRI $ arcASN1 ) )
 #
-##
+# 2.2.2.  'x660ArcEntry'
+#
+#   The 'x660ArcEntry' object class makes a collection of attribute types
+#   available for use when crafting non-root arc entries within a DIT.
 #
 objectClasses: ( 1.3.6.1.4.1.56521.101.2.2.2
          NAME 'x660ArcEntry'
@@ -551,17 +1004,28 @@ objectClasses: ( 1.3.6.1.4.1.56521.101.2.2.2
          SUP top
          STRUCTURAL
          MUST ( arc )
-         MAY ( arcAddlSecId $ arcData $ arcOID $ arcSecId $ arcId $
-               arcAuthorityContact $ arcSponsorContact $ arcDefaultContact $
-               labeledURI $ arcDescription $ arcTitle $ arcCreateTimestamp $
-               arcModifyTimestamp ) )
+         MAY ( arcAddlSecId $ arcData $ arcOID $ arcSecId $ arcTitle $
+               arcSponsorContact $ arcAuthorityContact $ labeledURI $
+               arcDefaultContact $ arcDescription $ arcModifyTimestamp $
+               arcCreateTimestamp $ arcId $ arcLongId $ arcIRI $
+               arcASN1 ) )
 #
-##
+# 2.2.3.  'x660ContactEntry'
+#
+#   The 'x660ContactEntry' object class allows generalized default,
+#   sponsor and/or authority contact information to be stored within an
+#   entry.
+#
+#   In larger, more complete implementations of this specification, it
+#   is RECOMMENDED that registration data be stored in dedicated entries
+#   that bear this class.  In contrast, sparse implementations MAY opt
+#   to assign this class directly to x660RootArcEntry and x660ArcEntry
+#   DIT entries, though this is not required.
 #
 objectClasses: ( 1.3.6.1.4.1.56521.101.2.2.3
          NAME 'x660ContactEntry'
          DESC 'A generalized auxiliary class for X.660 arc registration
-            contact, sponsor and/or authority information'
+            default, sponsor and/or authority contact information'
          SUP top
          AUXILIARY
          MAY ( arcRegAuthorityPostalAddress $ arcRegAuthorityState $
@@ -587,6 +1051,4 @@ objectClasses: ( 1.3.6.1.4.1.56521.101.2.2.3
                arcRegSponsorEmail $ arcRegSponsorTitle $
                arcRegAuthorityOrg $ arcRegDefaultOrg $
                arcRegSponsorOrg $ arcRegId ) )
-#
-##
 #
