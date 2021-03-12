@@ -16,3 +16,4 @@ __!! THIS IS A WORK IN PROGRESS !!__
 # What has changed since last update?
 
   * Added `arcIRI` and `arcASN1` attribute types for certain situations
+  * Added `arcLongId` attribute type for assignment of a well-known "long arc name" residing within the `Joint-ISO-ITU-T (2)` root
