@@ -4,7 +4,7 @@ Schema files and LDIF examples pertaining to [`draft-coretta-x660-ldap`](https:/
 
 This draft describes a means for storing any OID in existence, along with OID registration details, within an LDAP directory information tree. It can tolerate the storage of (virtually) the entire OID spectrum, or merely a subset of OIDs. This specification offers two logical models: 2D and 3D.
 
-Current document version is `04`.
+Current document version is `05`.
 
 __!! THIS IS A WORK IN PROGRESS !!__
 
@@ -12,3 +12,7 @@ __!! THIS IS A WORK IN PROGRESS !!__
 
   * Two logically-identical schema files are provided; one is formatted for use by 389DS (Netscape Directory), while the other is formatted for use by OpenLDAP.
   * A variety of LDIF files are made available to individuals attempting to test this specification.
+
+# What has changed since last update?
+
+  * Added `arcIRI` and `arcASN1` attribute types for certain situations
