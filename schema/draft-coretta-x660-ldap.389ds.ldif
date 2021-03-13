@@ -64,7 +64,6 @@ attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.2
 attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.3
          NAME 'arcIRI'
          DESC 'Internationalized Resource Identifier for an X.660 arc'
-         SINGLE-VALUE
          EQUALITY octetStringMatch
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
 #
@@ -143,7 +142,6 @@ attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.8
          NAME 'arcLongId'
          DESC 'The well-known Long Arc name associated with, and
             registered to, a Joint-ISO-ITU-T subordinate X.660 arc'
-         SINGLE-VALUE
          SUP name )
 #
 # 2.1.9.  'arcData'
@@ -218,7 +216,8 @@ attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.13
 #   This attribute type is derived from 'description', as defined in
 #   Section 2.5 of [RFC4519].
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.14        NAME 'arcDescription'
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.14        
+        NAME 'arcDescription'
         DESC 'Short description of an X.660 arc'
         SUP description )
 #
@@ -235,13 +234,6 @@ attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.14        NAME 'arcDescription'
 #   and/or authority information.  This allows absolute and unambiguous
 #   reference to any registration entry by DN.
 #
-attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.15
-        NAME 'arcRegId'
-        DESC 'GUID or UUID assigned to an X.660 arc contact entry'
-        SINGLE-VALUE
-        EQUALITY octetStringMatch
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
-#
 #   Please note the intended use of this attribute type SHOULD NOT be
 #   confused with the act of numbering an arc using the numerical form
 #   of a GUID or UUID value, such as:
@@ -251,6 +243,13 @@ attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.15
 #   Such an act can be achieved through standard use of the arc attribute
 #   type (defined in Section 2.1.1) as it allows an integer value of
 #   suitable size to accommodate such a value.
+#
+attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.15
+        NAME 'arcRegId'
+        DESC 'GUID or UUID assigned to an X.660 arc contact entry'
+        SINGLE-VALUE
+        EQUALITY octetStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
 #
 # 2.1.16.  'arcCreateTimestamp'
 #
