@@ -6,7 +6,7 @@
 #
 # !! This specification is a WORK IN PROGRESS !!
 #
-# OID Tree:
+# OID Branch:
 #
 # 1.3.6.1.4.1.56521.101 (x660-ldap)
 #                     \
@@ -53,7 +53,8 @@ attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.2
 #
 # 2.1.3.  'arcIRI'
 #
-#   The 'arcIRI' attribute type allows the storage of an arc's IRI.
+#    The 'arcIRI' attribute type allows the storage of one or more IRI
+#    values within an arc registration entry.
 #
 #   Please note this attribute type is only required in two-dimensional
 #   directory model implementations of this specification, or if clients
@@ -129,7 +130,7 @@ attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.7
 # 2.1.8.  'arcLongId'
 #
 #   The 'arcLongId' attribute type allows the storage of the so-called
-#   "Long Arc" well-known identifier.  Per [X.660], entries that bear
+#   "Long Arc" well-known identifiers.  Per [X.660], entries that bear
 #   this attribute type MUST reside below the root Joint-ISO-ITU-T (2)
 #   arc.
 #
@@ -138,7 +139,7 @@ attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.7
 #
 attributeTypes: ( 1.3.6.1.4.1.56521.101.2.1.8
          NAME 'arcLongId'
-         DESC 'The well-known Long Arc name associated with, and
+         DESC 'The well-known Long Arc names associated with, and
             registered to, a Joint-ISO-ITU-T subordinate X.660 arc'
          SUP name )
 #
