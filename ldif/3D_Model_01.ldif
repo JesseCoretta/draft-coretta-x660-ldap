@@ -104,7 +104,8 @@ objectClass: top
 objectClass: x660RootArcEntry
 arc: 2
 arcId: Joint-ISO-ITU-T
-arcSecId: joint-iso-ccitt
+arcSecId: joint-iso-itu-t
+arcSecAddlId: joint-iso-ccitt
 
 ## OID: 2.999 (Example)
 dn: arc=999,arc=2,ou=X660,dc=example,dc=com
