@@ -23,6 +23,7 @@ objectClass: x660RootArcEntry
 
 ## OID: 2.999
 dn: arcOID=2.999,arc=2,ou=X660,dc=example,dc=com
+arc: 999
 arcOID: 2.999
 arcId: Example
 arcLongId: /Example
