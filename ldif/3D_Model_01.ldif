@@ -97,3 +97,36 @@ arc: 2
 arcId: oc
 arcSecId: objectclasses
 arcTitle: X.660 LDAP Object Class Definitions
+
+## Root Arc: 2 (Joint-ISO-ITU-T)
+dn: arc=2,ou=X660,dc=example,dc=com
+objectClass: top
+objectClass: x660RootArcEntry
+arc: 2
+arcId: Joint-ISO-ITU-T
+arcSecId: joint-iso-ccitt
+
+## OID: 2.999 (Example)
+dn: arc=999,arc=2,ou=X660,dc=example,dc=com
+objectClass: top
+objectClass: x660ArcEntry
+arc: 999
+arcId: Example
+arcLongId: /Example
+arcLongId: /Exemple
+arcLongId: /Ejemplo
+arcLongId: /المثال
+arcLongId: /范例
+arcLongId: /Пример
+arcLongId: /예제
+arcLongId: /例
+arcLongId: /Beispiel
+arcIRI: /Joint-ISO-ITU-T/Example
+arcIRI: /Joint-ISO-ITU-T/Exemple
+arcIRI: /Joint-ISO-ITU-T/Ejemplo
+arcIRI: /Joint-ISO-ITU-T/المثال
+arcIRI: /Joint-ISO-ITU-T/范例
+arcIRI: /Joint-ISO-ITU-T/Пример
+arcIRI: /Joint-ISO-ITU-T/예제
+arcIRI: /Joint-ISO-ITU-T/例
+arcIRI: /Joint-ISO-ITU-T/Beispiel
