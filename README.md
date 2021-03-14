@@ -13,6 +13,12 @@ __!! THIS IS A WORK IN PROGRESS !!__
   * Two logically-identical schema files are provided; one is formatted for use by 389DS (Netscape Directory), while the other is formatted for use by OpenLDAP.
   * A variety of LDIF files are made available to individuals attempting to test this specification.
 
+# Why does this repo exist?
+
+  * Allow for peer review discussions in the form of Issues
+  * Track and organize pending changes via Issues
+  * Provide helpful information and media outside of the scope of a typical internet draft
+
 # What has changed since last update?
 
   * Added `arcIRI` and `arcASN1` attribute types for certain situations
