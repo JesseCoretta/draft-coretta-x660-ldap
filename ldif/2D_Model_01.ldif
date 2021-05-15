@@ -4,7 +4,7 @@
 ## registration contact information is shown.
 
 ## Root Arc: 1 (ISO)
-dn: arc=1,ou=X660,dc=example,dc=com
+dn: arc=1,ou=OID,ou=X660,dc=example,dc=com
 n: 1
 unicodeValue: iso
 objectClass: top
@@ -45,7 +45,7 @@ iRI: /Joint-ISO-ITU-T/例
 iRI: /Joint-ISO-ITU-T/Beispiel
 
 ## OID: 1.3
-dn: dottedNotation=1.3,arc=1,ou=X660,dc=example,dc=com
+dn: dottedNotation=1.3,arc=1,ou=OID,ou=X660,dc=example,dc=com
 dottedNotation: 1.3
 n: 3
 objectClass: x660SubArcEntry
@@ -53,7 +53,7 @@ objectClass: top
 unicodeValue identified-organization
 
 ## OID: 1.3.6
-dn: dottedNotation=1.3.6,arc=1,ou=X660,dc=example,dc=com
+dn: dottedNotation=1.3.6,arc=1,ou=OID,ou=X660,dc=example,dc=com
 n: 6
 dottedNotation: 1.3.6
 objectClass: x660SubArcEntry
@@ -61,7 +61,7 @@ objectClass: top
 unicodeValue dod
 
 ## OID: 1.3.6.1
-dn: dottedNotation=1.3.6.1,arc=1,ou=X660,dc=example,dc=com
+dn: dottedNotation=1.3.6.1,arc=1,ou=OID,ou=X660,dc=example,dc=com
 unicodeValue internet
 n: 1
 dottedNotation: 1.3.6.1
@@ -69,7 +69,7 @@ objectClass: x660SubArcEntry
 objectClass: top
 
 ## OID: 1.3.6.1.4
-dn: dottedNotation=1.3.6.1.4,arc=1,ou=X660,dc=example,dc=com
+dn: dottedNotation=1.3.6.1.4,arc=1,ou=OID,ou=X660,dc=example,dc=com
 unicodeValue private
 n: 4
 dottedNotation: 1.3.6.1.4
@@ -80,7 +80,7 @@ identifier: private
 description: Private projects
 
 ## OID: 1.3.6.1.4.1
-dn: dottedNotation=1.3.6.1.4.1,arc=1,ou=X660,dc=example,dc=com
+dn: dottedNotation=1.3.6.1.4.1,arc=1,ou=OID,ou=X660,dc=example,dc=com
 unicodeValue enterprise
 n: 1
 dottedNotation: 1.3.6.1.4.1
@@ -90,7 +90,7 @@ identifier: enterprises
 description: Private Enterprises
 
 ## OID: 1.3.6.1.4.1.56521
-dn: dottedNotation=1.3.6.1.4.1.56521,arc=1,ou=X660,dc=example,dc=com
+dn: dottedNotation=1.3.6.1.4.1.56521,arc=1,ou=OID,ou=X660,dc=example,dc=com
 unicodeValue 56521
 n: 56521
 dottedNotation: 1.3.6.1.4.1.56521
@@ -100,7 +100,7 @@ unicodeValue: Jesse Coretta
 description: OIDs reserved by Jesse Coretta
 
 ## OID: 1.3.6.1.4.1.56521.101
-dn: dottedNotation=1.3.6.1.4.1.56521.101,arc=1,ou=X660,dc=example,dc=com
+dn: dottedNotation=1.3.6.1.4.1.56521.101,arc=1,ou=OID,ou=X660,dc=example,dc=com
 description: Models and schema definitions for the storage of Rec. ITU-T X.660 registration data in a Lightweight Directory Access Protocol (LDAP) Directory Information Tree (DIT)
 unicodeValue draft-coretta-x660-ldap
 dottedNotation: 1.3.6.1.4.1.56521.101
@@ -112,7 +112,7 @@ objectClass: top
 objectClass: x660SubArcEntry
 
 ## OID: 1.3.6.1.4.1.56521.101.2
-dn: dottedNotation=1.3.6.1.4.1.56521.101.2,arc=1,ou=X660,dc=example,dc=com
+dn: dottedNotation=1.3.6.1.4.1.56521.101.2,arc=1,ou=OID,ou=X660,dc=example,dc=com
 unicodeValue schema
 dottedNotation: 1.3.6.1.4.1.56521.101.2
 n: 2
@@ -121,7 +121,7 @@ objectClass: top
 objectClass: x660SubArcEntry
 
 ## OID: 1.3.6.1.4.1.56521.101.2.1
-dn: dottedNotation=1.3.6.1.4.1.56521.101.2.1,arc=1,ou=X660,dc=example,dc=com
+dn: dottedNotation=1.3.6.1.4.1.56521.101.2.1,arc=1,ou=OID,ou=X660,dc=example,dc=com
 dottedNotation: 1.3.6.1.4.1.56521.101.2.1
 n: 1
 description: X.660 LDAP Attribute Type Definitions
@@ -131,7 +131,7 @@ unicodeValue at
 identifier: attributetypes
 
 ## OID: 1.3.6.1.4.1.56521.101.2.2
-dn: dottedNotation=1.3.6.1.4.1.56521.101.2.2,arc=1,ou=X660,dc=example,dc=com
+dn: dottedNotation=1.3.6.1.4.1.56521.101.2.2,arc=1,ou=OID,ou=X660,dc=example,dc=com
 dottedNotation: 1.3.6.1.4.1.56521.101.2.2
 n: 2
 description: X.660 LDAP Object Class Definitions
