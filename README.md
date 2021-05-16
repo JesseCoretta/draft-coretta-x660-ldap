@@ -4,7 +4,7 @@ Schema files and LDIF examples pertaining to [`draft-coretta-x660-ldap`](https:/
 
 This draft describes a means for storing any OID in existence, along with OID registration details, within an LDAP directory information tree. It can tolerate the storage of (virtually) the entire OID spectrum, or merely a subset of OIDs. This specification offers two logical models: 2D and 3D.
 
-Current document version is `05`.
+Current document version is `06`.
 
 __!! THIS IS A WORK IN PROGRESS !!__
 
@@ -21,5 +21,5 @@ __!! THIS IS A WORK IN PROGRESS !!__
 
 # What has changed since last update?
 
-  * Added `arcIRI` and `arcASN1` attribute types for certain situations
-  * Added `arcLongId` attribute type for assignment of a well-known "long arc name" residing within the `Joint-ISO-ITU-T (2)` root
+  * Major attribute type name changes due to community feedback; understand these are not necessarily final
+  * Grammar improvements

@@ -8,17 +8,22 @@ objectClass: domain
 objectClass: top
 dc: example
 
-## For storage of actual arc definition
-## entries.
+## For storage of all X.660 content
 dn: ou=X660,dc=example,dc=com
 ou: X660
+objectClass: organizationalUnit
+objectClass: top
+
+## For storage of actual arc (OID) entries
+dn: ou=OID,ou=X660,dc=example,dc=com
+ou: OID
 objectClass: organizationalUnit
 objectClass: top
 
 ## For storage of independent contact,
 ## authority and sponsor registration
 ## entries. Optional.
-dn: ou=Contacts,dc=example,dc=com
-ou: Contacts
+dn: ou=Registry,ou=X660,dc=example,dc=com
+ou: Registry
 objectClass: organizationalUnit
 objectClass: top
