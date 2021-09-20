@@ -1,0 +1,9 @@
+## this is an augment LDIF example that demonstrates how
+## the RootDSE could be extended to support auto-config
+## for DUAs:
+
+dn:
+objectClass: x660DUAConfig
+rADirectoryModel: 1.3.6.1.4.1.56521.101.3.3
+rARegistrationBase: ou=OID,ou=X660,dc=example,dc=com
+rARegistrantBase: ou=Registry,ou=X660,dc=example,dc=com
