@@ -1,37 +1,9 @@
-## This LDIF contains context-specific registration contacts.
-## Each of these entries should be referenced by the DN-based
-## arcDefaultContact, arcSponsorContact and arcAuthorityContact
-## attribute types respectively.
-
-dn: arcRegId=b295b891-7b1d-4a55-b573-159c991b8e55,ou=Registry,ou=X660,dc=example,dc=com
-cn: b295b891-7b1d-4a55-b573-159c991b8e55
-arcRegId: b295b891-7b1d-4a55-b573-159c991b8e55
-objectClass: organizationalRole
-objectClass: x660ContactEntry
+dn: registrantID=draft-coretta-x660-ldap,ou=Registry,ou=X660,dc=coretta,dc=zone
+registrantID: draft-coretta-x660-ldap
+cn: draft-coretta-x660-ldap
+firstAuthorityCommonName: Jesse Coretta
+objectClass: x660Registrant
 objectClass: top
-currentRegAuthorityPostalAddress: 123 Fake St$Anywhere$CA$99999
-currentRegAuthorityCommonName: Jesse Coretta
-currentRegAuthorityEmail: jesse.coretta@example.com
-currentRegAuthorityMobile: +1 123 456 7890
-
-dn: arcRegId=a590419f-ed3e-4686-8588-81dd1d2952e3,ou=Registry,ou=X660,dc=example,dc=com
-cn: a590419f-ed3e-4686-8588-81dd1d2952e3
-arcRegId: a590419f-ed3e-4686-8588-81dd1d2952e3
 objectClass: organizationalRole
-objectClass: x660ContactEntry
-objectClass: top
-firstRegAuthorityPostalAddress: 789 Fake St$Anywhere$CA$99999
-firstRegAuthorityOrg: Default Contact, Co.
-firstRegAuthorityEmail: default@example.com
-firstRegAuthorityMobile: +1 123 456 0123
-
-dn: arcRegId=c108fcd9-c462-485d-88a9-0f18c7b284c2,ou=Registry,ou=X660,dc=example,dc=com
-cn: c108fcd9-c462-485d-88a9-0f18c7b284c2
-arcRegId: c108fcd9-c462-485d-88a9-0f18c7b284c2
-objectClass: organizationalRole
-objectClass: x660ContactEntry
-objectClass: top
-sponsorPostalAddress: 456 Fake St$Anywhere$CA$99999
-sponsorOrg: Sponsor, Co.
-sponsorEmail: sponsor@example.com
-sponsorMobile: +1 123 456 0987
+firstAuthorityEmail: jesse.coretta@icloud.com
+firstAuthorityURI: https://datatracker.ietf.org/doc/draft-coretta-x660-ldap/
