@@ -4,7 +4,7 @@ Schema files and LDIF examples pertaining to [`draft-coretta-x660-ldap`](https:/
 
 This draft describes a means for storing any OID in existence, along with OID registration details, within an LDAP directory information tree. It can tolerate the storage of (virtually) the entire OID spectrum, or merely a subset of OIDs. This specification offers two logical models: 2D and 3D.
 
-Current document version is `06`.
+Current document version is `07`.
 
 __!! THIS IS A WORK IN PROGRESS !!__
 
@@ -21,5 +21,6 @@ __!! THIS IS A WORK IN PROGRESS !!__
 
 # What has changed since last update?
 
-  * Major attribute type name changes due to community feedback; understand these are not necessarily final
-  * Grammar improvements
+  * Positional attribute types
+  * Security considerations
+  * Allow client auto-configuration through DUA parameter advertisement
