@@ -1,129 +1,70 @@
-## This LDIF is an example of how all arcs up to
-## and including the arcs defined in this draft
-## can be stored in "3D". For simplicity, no
-## registration contact information is shown.
-
-## Root Arc: 1 (ISO)
-dn: n=1,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660RootArcEntry
-unicodeValue: iso
-n: 1
-
-## OID: 1.3
-dn: n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660SubArcEntry
-n: 3
-unicodeValue: identified-organization
-
-## OID: 1.3.6
-dn: n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660SubArcEntry
-n: 6
-unicodeValue: dod
-
-## OID: 1.3.6.1
-dn: n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660SubArcEntry
-n: 1
-unicodeValue: internet
-
-## OID: 1.3.6.1.4
-dn: n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660SubArcEntry
-n: 4
-unicodeValue: private
-description: Private projects
-arcURI: https://tools.ietf.org/html/rfc1155 RFC1155
-
-## OID: 1.3.6.1.4.1
-dn: n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660SubArcEntry
-n: 1
-additionalIdentifier: enterprises
-identifier: enterprise
-unicodeValue: enterprise
-description: Private Enterprises
-
-## OID: 1.3.6.1.4.1.56521
 dn: n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
 objectClass: top
-objectClass: x660SubArcEntry
+objectClass: x660SubArc
+objectClass: x660Registrant
 n: 56521
-unicodeValue: Jesse Coretta
-description: OIDs reserved by Jesse Coretta
+identifier: Jesse Coretta
+iRI: /ISO/Identified-Organization/6/1/4/1/56521
+asn1Notation: {iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1)} 56521}
+nameAndNumberForm: 56521
+subArc: n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+supArc: n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
 
-## OID: 1.3.6.1.4.1.56521.101
 dn: n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660SubArcEntry
+registrationInformation: Lightweight Directory Access Protocol (LDAP) Procedures andSchema Definitions for the Storage of X.660 Registration Information
+identifier: x660-ldap
+objectClass: x660SubArc
 n: 101
-unicodeValue: x660-ldap
-identifier: draft-coretta-x660-ldap
-description: draft-coretta-x660-ldap
-arcInformation: Models and schema definitions for the storage of Rec. ITU-T X.660 registration data in a Lightweight Directory Access Protocol (LDAP) Directory Information Tree (DIT)
+registrationURI: https://datatracker.ietf.org/doc/draft-coretta-x660-ldap/
+description: X.660 LDAP Procedures and Schema Definitions
+firstAuthority: registrantID=draft-coretta-x660-ldap,ou=Registry,ou=X660,dc=example,dc=com
+subArc: n=2,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+subArc: n=3,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+supArc: n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+asn1Notation: {iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 56521 x660-ldap(101)}
+nameAndNumberForm: x660-ldap(101)
 
-## OID: 1.3.6.1.4.1.56521.101.2
 dn: n=2,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660SubArcEntry
-unicodeValue: schema
+identifier: schema
+objectClass: x660SubArc
 n: 2
-description: X.660 LDAP Schema Definitions
+asn1Notation: {iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 56521 x660-ldap(101) schema(2)}
+iRI: /ISO/Identified-Organization/6/1/4/1/56521/101/2
+nameAndNumberForm: schema(2)
+subArc: n=1,n=2,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+subArc: n=2,n=2,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+supArc: n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+rightArc: n=3,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
 
-## OID: 1.3.6.1.4.1.56521.101.2.1
+dn: n=3,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+objectClass: x660SubArc
+n: 3
+identifier: models
+iRI: /ISO/Identified-Organization/6/1/4/1/56521/101/3
+asn1Notation: {iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 56521 x660-ldap(101) models(3)}
+subArc: n=2,n=3,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+subArc: n=3,n=3,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+nameAndNumberForm: models(3)
+additionalIdentifier: directoryModels
+supArc: n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+leftArc: n=2,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+
 dn: n=1,n=2,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660SubArcEntry
-n: 1
+identifier: at
 unicodeValue: at
-identifier: attributetypes
-description: X.660 LDAP Attribute Type Definitions
+objectClass: x660SubArc
+n: 1
+asn1Notation: {iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 56521 x660-ldap(101) schema(2) at(1)}
+nameAndNumberForm: at(1)
+additionalIdentifier: attributeTypes
+supArc: n=2,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
 
-## OID: 1.3.6.1.4.1.56521.101.2.2
 dn: n=2,n=2,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660SubArcEntry
-n: 2
+identifier: oc
 unicodeValue: oc
-identifier: objectclasses
-description: X.660 LDAP Object Class Definitions
-
-## Root Arc: 2 (Joint-ISO-ITU-T)
-dn: n=2,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660RootArcEntry
+objectClass: x660SubArc
 n: 2
-unicodeValue: joint-iso-itu-t
-identifier: joint-iso-itu-t
-additionalIdentifier: joint-iso-ccitt
-
-## OID: 2.999 (Example)
-dn: n=999,n=2,ou=OID,ou=X660,dc=example,dc=com
-objectClass: top
-objectClass: x660SubArcEntry
-n: 999
-unicodeValue: Example
-longArc: /Example
-longArc: /Exemple
-longArc: /Ejemplo
-longArc: /المثال
-longArc: /范例
-longArc: /Пример
-longArc: /예제
-longArc: /例
-longArc: /Beispiel
-iRI: /Joint-ISO-ITU-T/Example
-iRI: /Joint-ISO-ITU-T/Exemple
-iRI: /Joint-ISO-ITU-T/Ejemplo
-iRI: /Joint-ISO-ITU-T/المثال
-iRI: /Joint-ISO-ITU-T/范例
-iRI: /Joint-ISO-ITU-T/Пример
-iRI: /Joint-ISO-ITU-T/예제
-iRI: /Joint-ISO-ITU-T/例
-iRI: /Joint-ISO-ITU-T/Beispiel
+asn1Notation: {iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 56521 x660-ldap(101) schema(2) oc(2)}
+nameAndNumberForm: oc(2)
+additionalIdentifier: objectClasses
+supArc: n=2,n=101,n=56521,n=1,n=4,n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com

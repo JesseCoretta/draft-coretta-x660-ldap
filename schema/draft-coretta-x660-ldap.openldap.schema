@@ -1,6 +1,6 @@
 # DRAFT version of X.660 LDAP Schema
 # Author: Jesse Coretta
-# Version: 6
+# Version: 7
 # URL: https://datatracker.ietf.org/doc/draft-coretta-x660-ldap/
 #
 # !! This specification is a WORK IN PROGRESS !!
@@ -11,6 +11,7 @@ objectIdentifier x660 1.3.6.1.4.1.56521.101
 objectIdentifier x660schema x660:2
 objectIdentifier x660at x660schema:1
 objectIdentifier x660oc x660schema:2
+#
 # 2.  Schema Definitions
 #
 #    This section discusses the particulars of the LDAP schema definitions
@@ -25,1070 +26,1341 @@ objectIdentifier x660oc x660schema:2
 #    The following subsections detail LDAP attribute types created for use
 #    within implementations of this specification.
 #
+#    Please note that a great many of these attribute type definitions
+#    are sub types of attribute types defined in the following Standards
+#    Documents, and as such are dependencies:
+#
+#      - [RFC2079] for URI support
+#      - [RFC4519] for so-called "core" schema elements
+#      - [RFC4524] for Cosine schema elements
+#
+#    If the nature of a particular directory implementation precludes the
+#    use of subtyped attributes, this specification may not be practical
+#    for adoption.
+#
+#    If a directory architect opts to extend certain definitions in this
+#    Section for the purpose of Collective Attribute [RFC3671] support,
+#    they are advised to adhere to the prescribed attribute type naming
+#    prefix ("c-"), per Section 3 of [RFC3671].
+#
+#    Very few attribute types are actually REQUIRED for registrations and
+#    not all types will necessarily apply to every situation.  Directory
+#    architects are advised to carefully identify what types are needed,
+#    and make interactive procedures and "best practices" available and
+#    well-documented for all relevant consuming entities.
+#
 # 2.1.1.  'n'
 #
 #    The 'n' attribute type allows the assignment of an unsigned integer,
-#    meant to represent the primary identifier of the entry.
+#    meant to represent the primary identifier, or NumberForm [X.680], of
+#    the entry.
 #
 #    This attribute type plays a crucial role with regards to DN syntax
 #    used in the three-dimensional directory model described in Section
 #    3.3.
 #
 attributetype ( x660at:1
-         NAME 'n'
-         DESC 'A single unsigned integer value assigned to an OID arc
-            to represent its primary integer identifier'
+         NAME ( 'n' 'numberForm' )
+         DESC 'A single unsigned integer value assigned to
+            a registration to represent its primary integer
+            identifier'
          EQUALITY integerMatch
          SINGLE-VALUE
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 )
 #
-#    As a usage example, consider the RECOMMENDED distinguished name
-#    structure for three-dimensional implementations as described in
-#    Section 3.3:
+#    Examples: "56521", "0"
 #
-#     dn: n=3,n=1,ou=OID,ou=X660,dc=example,dc=com
+# 2.1.2.  'dotNotation'
 #
-# 2.1.2.  'dottedNotation'
-#
-#    The 'dottedNotation' attribute type allows the assignment of an OID
-#    value [X.680] in dot-delimited form to an arc entry.
-#
-#    Please note this attribute type is only required in two-dimensional
-#    directory model implementations of this specification.
+#    The 'dotNotation' attribute type allows the assignment of an OID
+#    value [X.680] in dot-delimited form to a registration entry.
 #
 attributetype ( x660at:2
-         NAME 'dottedNotation'
-         DESC 'Dotted ASN.1 Object Identifier for non-root OIDs'
+         NAME 'dotNotation'
+         DESC 'Dotted ASN.1 Object Identifier for a sub arc'
          EQUALITY objectIdentifierMatch
          SINGLE-VALUE
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.38 )
 #
-#     Example:
-#
-#     dottedNotation: 1.3.6.1
+#     Examples: "1.3.6.1", "2.999"
 #
 # 2.1.3.  'iRI'
 #
 #    The 'iRI' attribute type allows the assignment of one or more IRI
-#    values to an arc entry.
-#
-#    Please note this attribute type is only required in two-dimensional
-#    directory model implementations of this specification, or if clients
-#    will not automatically discover a given IRI value by traversal.
+#    values to an registration entry.
 #
 attributetype ( x660at:3
          NAME 'iRI'
-         DESC 'Internationalized Resource Identifiers for an OID'
+         DESC 'Internationalized Resource Identifiers
+            for a registration entry'
          EQUALITY octetStringMatch
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
 #
-#    Example:
-#
-#     iRI: /ISO/Identified-Organization
+#    Examples: "/ITU-T", "/ISO/Identified-Organization", "/ASN.1"
 #
 # 2.1.4.  'asn1Notation'
 #
 #    The 'asn1Notation' attribute type allows the assignment of an OID
-#    in ASN.1 notation to an arc entry.
-#
-#    Please note this attribute type is only required in two-dimensional
-#    directory model implementations of this specification, or if clients
-#    will not automatically discover a given ASN.1 value by traversal.
+#    in ASN.1 notation to a registration entry.
 #
 attributetype ( x660at:4
          NAME 'asn1Notation'
-         DESC 'ASN.1 values, encapsulated between curly
-            braces, for an OID'
+         DESC 'An ordered sequence of NameAndNumberForm
+            or NumberForm values, enclosed within curly
+            braces, that identify an OID'
          SINGLE-VALUE
          EQUALITY caseIgnoreMatch
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
 #
-#    Example:
-#
-#     asn1Notation: {iso(1) identified-organization(3)}
+#    Examples: "{itu-t(0)}", "{iso(1) identified-organization(3)}"
 #
 # 2.1.5.  'unicodeValue'
 #
-#    The 'unicodeValue' attribute type allows the assignment of the
-#    Unicode-based primary identifier (non-numeric) [X.660] to an arc
-#    entry.
+#    The 'unicodeValue' attribute type allows the assignment of one or
+#    more Unicode-based primary identifiers (non-numeric) [X.660] to a
+#    registration entry.
+#
+#    Although multi-value support is positive, cases in which any given
+#    registration has multiple 'unicodeValue' values is extremely rare.
 #
 attributetype ( x660at:5
          NAME 'unicodeValue'
-         DESC 'The primary non-numeric Unicode identifier
-            for an arc'
-         SINGLE-VALUE
+         DESC 'Primary non-numeric Unicode identifiers
+            for a registration'
          EQUALITY octetStringMatch
          SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
 #
-#    Example:
-#
-#     unicodeValue: itu-t
+#    Examples: "ITU-T", "Identified-Organization"
 #
 # 2.1.6.  'identifier'
 #
 #    The 'identifier' attribute type allows the assignment of a single
-#    non-Unicode, non-numeric identifier [X.660] to an arc entry.
+#    non-Unicode, non-numeric identifier [X.660], or NameForm [X.680],
+#    to a registration entry.
+#
+#    The first character MUST be a lowercase letter and MUST NOT include
+#    any white space.
+#
+#    The same value can be applied to the 'nameAndNumberForm' attribute
+#    as a partial value.  See Section 2.1.17 for more information on this
+#    attribute type.
 #
 #    The attribute type 'name', as defined in Section 2.18 of [RFC4519],
 #    is a super type of this attribute type.
 #
 attributetype ( x660at:6
-         NAME 'identifier'
+         NAME ( 'identifier' 'nameForm' )
          DESC 'The non-Unicode secondary identifier
-            for an arc'
+            for a registration'
          SINGLE-VALUE
          SUP name )
 #
-#    Example:
-#
-#     identifier: itu-t
+#    Examples: "itu-t", "iso"
 #
 # 2.1.7.  'additionalIdentifier'
 #
 #    The 'additionalIdentifier' attribute type allows the assignment of
-#    of one or more additional identifiers [X.660] in an arc entry.
+#    of one or more additional identifiers [X.660] in a registration.
 #
 #    The attribute type 'name', as defined in Section 2.18 of [RFC4519],
 #    is a super type of this attribute type.
 #
 attributetype ( x660at:7
          NAME 'additionalIdentifier'
-         DESC 'The non-Unicode additional identifier for an arc'
+         DESC 'The non-Unicode additional identifiers
+            or nameForms for a registration'
          SUP name )
 #
-#    Example:
+#    Examples: "enterprises", "ccitt"
 #
-#     additionalIdentifier: ccitt
+# 2.1.8.  'registrationInformation'
 #
-# 2.1.8.  'longArc'
-#
-#    The 'longArc' attribute type allows the assignment of one or more
-#    so-called "Long Arc" well-known identifiers to an arc entry.
-#
-#    Per [X.660], entries that bear values of this attribute type MUST
-#    reside below the root joint-iso-itu-t (2) arc entry.
+#    The 'registrationInformation' attribute type allows the OPTIONAL
+#    assignment of octet based values intended for extended information
+#    relating to the registration in question.
 #
 attributetype ( x660at:8
-         NAME 'longArc'
-         DESC 'The well-known Long Arc names associated with, and
-            registered to, a Joint-ISO-ITU-T subordinate arc'
+         NAME 'registrationInformation'
+         DESC 'Extended octet-based data for
+            a registration'
          EQUALITY octetStringMatch
-         SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{4096} )
 #
-#    Example:
+# 2.1.9.  'registrationURI'
 #
-#     longArc: /Example
-#
-# 2.1.9.  'arcInformation'
-#
-#    The 'arcInformation' attribute type allows the OPTIONAL assignment
-#    of octet based values intended for extended documentation or notes
-#    in an arc entry.
-#
-attributetype ( x660at:9
-         NAME 'arcInformation'
-         DESC 'Extended information for an arc'
-         EQUALITY octetStringMatch
-         SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
-#
-# 2.1.10.  'arcURI'
-#
-#    The 'arcURI' attribute type allows for the assignment of one or more
-#    URI values, with optional labels, to an arc entry.
+#    The 'registrationURI' attribute type allows for the assignment of
+#    one or more URI values, with optional labels, to a registration.
 #
 #    The attribute type 'labeledURI', as defined in [RFC2079], is a super
-#    type of this attrubute type.
+#    type of this attribute type.
 #
-attributetype ( x660at:10
-        NAME 'arcURI'
+attributetype ( x660at:9
+        NAME 'registrationURI'
         DESC 'URI, with an optional label, leading to
            further related subject matter information'
         SUP labeledURI )
 #
-#    Example:
+#    Examples: "http://example.com Example", "http://example.com"
 #
-#     arcURI: http://www.example.com Example
+# 2.1.10.  'registrationCreated'
 #
-# 2.1.11.  'arcRegId'
+#    The 'registrationCreated' attribute type allows for the assignment
+#    of a generalized timestamp indicating the date and time at which a
+#    registration was, or will be, created or officiated.
 #
-#    The 'arcRegId' attribute type is intended to allow for the singular
-#    assignment of a UUID or GUID to a contact entry.  When used, this
-#    value would act as an absolute identifier for registration entries
-#    that may change in the future.
-#
-#    In larger, more complete implementations of this specification, it
-#    is RECOMMENDED that this attribute type be the primary identifier
-#    (or, RDN) for contact entries.  This allows for an absolute and
-#    unambiguous reference to any registration entry by DN.
-#
-#    Please note the intended use of this attribute type SHOULD NOT be
-#    confused with the act of numbering an arc entry using the numerical
-#    form of a GUID or UUID value, such as:
-#
-#      2.25.483275873209587983492589328598493854833
-#
-#    Such an act can be achieved through standard use of the 'n'
-#    attribute type (defined in Section 2.1.1) as it allows an integer
-#    value of suitable size to accommodate such a value.
-#
-attributetype ( x660at:11
-        NAME 'arcRegId'
-        DESC 'GUID or UUID assigned to a past or
-           present registration authority or a
-           sponsor entry'
-        SINGLE-VALUE
-        EQUALITY octetStringMatch
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
-#
-#    Example:
-#
-#     arcRegId: 4ab9c766-a875-4045-8df2-d4505193cca5
-#
-# 2.1.12.  'arcCreateTimestamp'
-#
-#    The 'arcCreateTimestamp' attribute type allows for the assignment of
-#    a generalized timestamp indicating the date and time at which an arc
-#    entry was created.
-#
-attributetype ( x660at:12
-        NAME 'arcCreateTimestamp'
-        DESC 'Generalized timestamp for arc entry creation'
+attributetype ( x660at:10
+        NAME 'registrationCreated'
+        DESC 'Generalized timestamp for a
+           registration creation'
         SINGLE-VALUE
         EQUALITY generalizedTimeMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
 #
-#    Example:
+#    Examples: "19951231115959Z", "20130109033116Z"
 #
-#     arcCreateTimestamp: 20130109033116Z
+# 2.1.11.  'registrationModified'
 #
-# 2.1.13.  'arcModifyTimestamp'
-#
-#    The 'arcModifyTimestamp' attribute type allows for the assignment
+#    The 'registrationModified' attribute type allows for the assignment
 #    of one or more generalized timestamp values indicating the dates
-#    and times of all applied updates to an arc entry.
+#    and times of all applied updates to a registration.
 #
 #    Whether multiple dates, or only most recent date, are stored is
 #    entirely up to the directory architect(s) involved.
 #
-attributetype ( x660at:13
-        NAME 'arcModifyTimestamp'
-        DESC 'Generalized timestamps for arc entry modification'
+attributetype ( x660at:11
+        NAME 'registrationModified'
+        DESC 'Generalized timestamps for
+           registration modifications'
         EQUALITY generalizedTimeMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
 #
-#    Example:
+#    Examples: "19951231115959Z", "20130109033116Z"
 #
-#     arcModifyTimestamp: 20130109033116Z
+# 2.1.12.  'registrationRange'
 #
-# 2.1.14.  'currentRegAuthority'
+#    The 'registrationRange' attribute type allows for the expression of
+#    an OID allocation range, such as "100" to indicate 'up to 100', as
+#    well as "-1" to indicate 'to infinity'.
 #
-#    The 'currentRegAuthority' attribute type allows for the assignment
-#    of one or more DN values to an arc entry.
+#    The implied start of a range is the 'n' value of the registration
+#    entry that bears this attribute type, and would not need to be set
+#    explicitly.
 #
-#    The value(s) of this attribute type are meant to refer to distinct
-#    entries that contain current registration authority information for
-#    the indicated arc.
+#    The value of this attribute MUST always be greater-than and NOT equal
+#    to the value of 'n' EXCEPT when "-1" is used.
 #
-#    This attribute type is only required if such information is not
-#    stored within a given arc entry directly.
+#    For example, if a 'rangeTermintor' attribute value of '999' were set
+#    for the OID '2.999.44', it MUST be interpreted as an entire range of
+#    OIDs starting at '2.999.44' up to and including '2.999.999'.
+#
+#    Similarly, keeping with the same example above, if a value of "-1"
+#    were used instead, this MUST be interpreted as an all-encompassing
+#    OID range starting at '2.999.44' with absolutely no upper limit.
+#
+#    DUAs used to manage and allocate registration entries MUST always
+#    perform preemptive searches for occurrences of this attribute type
+#    prior to allocating any sibling registrations, so as to avoid illegal
+#    overlaps.
+#
+attributetype ( x660at:12
+         NAME 'registrationRange'
+         DESC 'Numerical registration range expression'
+         EQUALITY integerMatch
+         SINGLE-VALUE
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 )
+#
+#    Examples: "-1", "1999", "1000000"
+#
+# 2.1.13.  'registrationStatus'
+#
+#    The 'registrationStatus' attribute type allows for the assignment
+#    of status information, indicative of the current state of the
+#    registration.  Multiple values can be provided, however not all
+#    combinations are meaningful.
+#
+#    In most cases, this is used to mark a registration as "obsolete",
+#    "reserved", "private" or "deallocated", however values of "active"
+#    or "in-force" are also applicable in some cases.
+#
+#    Absence of this attribute type within a given entry SHOULD be viewed
+#    as an implied declaration of "active" or "in-force".
+#
+#    A value of "private" MAY be used a component in any access control
+#    mechanics defined by the directory architect(s), but at the risk of
+#    possible performance costs depending on implementation.  In addition,
+#    it is possible to leverage the 'discloseTo' attribute type defined
+#    in Section 2.1.26.  See Section 5 for more information.
+#
+#    Other possible values not listed here MAY be used, however they would
+#    be wholly proprietary in nature.
+#
+attributetype ( x660at:13
+        NAME 'registrationStatus'
+        DESC 'Current status of a registration'
+        SINGLE-VALUE
+        SUP description )
+#
+#    Examples: "obsolete", "deallocated", "reserved"
+#
+# 2.1.14.  'isLeafNode'
+#
+#    The 'isLeafNode' attribute type allows for the assignment of a single
+#    Boolean value indicative of whether a registration can be a parent to
+#    any subordinate registrations.
+#
+#    Absence of this attribute type SHOULD be interpreted as an implicit
+#    FALSE value.
+#
+#    A value of FALSE indicates there are no restrictions regarding the
+#    allocation or enumeration of any child entries.
+#
+#    A value of TRUE forbids the enumeration of all existing subordinate
+#    registrations, as well as the creation of new registrations.
+#
+#    When TRUE, this attribute type implies a TRUE value for 'isFrozen',
+#    per Section 2.1.15.  See Section 3.6.1.2.2.1 for considerations on
+#    various combinations of these attribute types.
+#
+#    This attribute type is NOT meant to serve in a security capacity.  If
+#    it is desirable to limit the enumeration of subordinate registrations
+#    with privacy or security in mind, the attribute types 'discloseTo'
+#    (Section 2.1.26) and/or 'registrationStatus' (Section 2.1.13) would
+#    be more appropriate.
 #
 attributetype ( x660at:14
-         NAME 'currentRegAuthority'
+         NAME 'isLeafNode'
+         DESC 'Whether a registration may allocate,
+            or allow the enumeration of, subordinate
+            registrations'
+         EQUALITY booleanMatch
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 )
+#
+#    Example: "TRUE", "FALSE", or UNDEFINED (implies "FALSE")
+#
+# 2.1.15.  'isFrozen'
+#
+#    The 'isFrozen' attribute type allows for the assignment of a single
+#    Boolean value indicative of whether a registration can be a parent
+#    to any further subordinate registrations beyond those that already
+#    exist at present.
+#
+#    A value of TRUE indicates that the given registration MUST NOT have
+#    any further children allocated, but that any entries that are already
+#    allocated SHALL be enumerated.
+#
+#    A value of FALSE indicates there are no restrictions regarding the
+#    allocation of any subsequent child entries, UNLESS a value of TRUE
+#    is defined for the 'isLeafNode' attribute type, per Section 2.1.14.
+#    Such a value supersedes any state of this attribute type.  Please
+#    see Section 3.6.1.2.2.1 for considerations on various combinations
+#    of these attribute types.
+#
+attributetype ( x660at:15
+         NAME 'isFrozen'
+         DESC 'Whether a registration may allocate
+            any additional subordinate registrations'
+         EQUALITY booleanMatch
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 )
+#
+#    Example: "TRUE", "FALSE", or UNDEFINED (implies "FALSE")
+#
+# 2.1.16.  'stdNameForm'
+#
+#    The 'stdNameForm' attribute type allows for the assignment of one
+#    or more Standardized NameForm values, per [X.660] and [X.680], to
+#    a registration.
+#
+attributetype ( x660at:16
+          NAME 'stdNameForm'
+          DESC 'Standardized NameForm per X.680'
+          EQUALITY caseExactMatch
+          SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+#
+#    Example: "{itu-t}", "{0 0 d}"
+#
+# 2.1.17.  'nameAndNumberForm'
+#
+#    The 'nameAndNumberForm' attribute type allows for the assignment of
+#    an [X.680] NameAndNumberForm value to a registration.
+#
+#    The value assigned to this attribute MUST manifest as a combination
+#    of values of 'identifier' and/or (at a minimum) 'n'.
+#
+attributetype ( x660at:17
+          NAME 'nameAndNumberForm'
+          DESC 'NameAndNumberForm value, per X.680'
+          EQUALITY caseExactMatch
+          SINGLE-VALUE
+          SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+#
+#    Example: "private(4)", "itu-t(0)", "56521"
+#
+# 2.1.18.  'longArc'
+#
+#    The 'longArc' attribute type allows the assignment of one or more
+#    so-called "Long Arc" well-known identifiers to a registration.
+#
+#    Per [X.660], entries that bear values of this attribute type MUST
+#    reside below the root joint-iso-itu-t(2) registration.
+#
+attributetype ( x660at:18
+         NAME 'longArc'
+         DESC 'The well-known Long Arc names associated with,
+            and registered to, a Joint-ISO-ITU-T subordinate
+            registration'
+         EQUALITY octetStringMatch
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
+#
+#    Examples: "/Example", "/Ejemplo"
+#
+# 2.1.19.  'supArc'
+#
+#    The 'supArc' attribute type allows for the assignment of an LDAP DN
+#    value to a registration, thereby identifying the DN of the immediate
+#    superior (parent) registration entry.
+#
+#    For example, the OID registration for 2.1.4 (ecn) would possess a DN
+#    value for this attribute type identifying its superior registration
+#    entry as 2.1 (asn1).
+#
+#    This OPTIONAL attribute type is among the seven (7) spatial types
+#    discussed in more detail in Section 3.6.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.  This sub type is
+#    MULTI-VALUED so as to support Collective Attribute extensibility
+#    [RFC3671], but is intended only for the storage of a single DN value
+#    per registration.
+#
+attributetype ( x660at:19
+         NAME 'supArc'
+         DESC 'LDAP Distinguished Name of the logically
+            superior immediate registration'
+         SUP distinguishedName )
+#
+#    Example: "n=1,n=2,ou=OID,ou=X660,dc=example,dc=com"
+#
+# 2.1.20.  'topArc'
+#
+#    The 'topArc' attribute type allows for the assignment of an LDAP DN
+#    value to a registration identifying the superior root registration.
+#
+#    For example, the OID registration for 2.1.4 (ecn) would possess a DN
+#    value for this attribute type identifying its root registration entry
+#    as 2 (Joint-ISO-ITU-T).
+#
+#    This OPTIONAL attribute type is among the seven (7) spatial types
+#    discussed in more detail in Section 3.6.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.  This sub type is
+#    MULTI-VALUED so as to support Collective Attribute extensibility
+#    [RFC3671], but is intended only for the storage of a single DN value
+#    per registration.
+#
+attributetype ( x660at:20
+         NAME 'topArc'
+         DESC 'LDAP Distinguished Name of the absolute
+            superior root registration'
+         SUP distinguishedName )
+#
+#    Example: "n=2,ou=OID,ou=X660,dc=example,dc=com"
+#
+# 2.1.21.  'subArc'
+#
+#    The 'subArc' attribute type allows for the assignment of one or
+#    more LDAP DN values to a registration as a manifest of subordinate
+#    registrations residing exactly one (1) logical level below.
+#
+#    This OPTIONAL attribute type is among the seven (7) spatial types
+#    discussed in more detail in Section 3.6.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.
+#
+attributetype ( x660at:21
+         NAME 'subArc'
+         DESC 'LDAP Distinguished Name of a subordinate
+            registration residing below a given entry'
+         SUP distinguishedName )
+#
+#    Example: "n=1,n=6,n=3,n=1,ou=OID,ou=X660,dc=example,dc=com"
+#
+# 2.1.22.  'leftArc'
+#
+#    The 'leftArc' attribute type allows for the assignment of an LDAP
+#    DN value to a registration.  The value SHOULD reference the nearest
+#    lexically-antecedent (left-hand) sibling registration.
+#
+#    As an example, given a registration for the OID 2.6 (mhs), the DN
+#    referencing the OID 2.5 (ds) is the lexically-nearest antecedent
+#    sibling registration.
+#
+#    This OPTIONAL attribute type is among the seven (7) spatial types
+#    discussed in more detail in Section 3.6.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.
+#
+attributetype ( x660at:22
+         NAME 'leftArc'
+         DESC 'LDAP Distinguished Name of the nearest
+            lexically antecedent sibling registration'
+         SINGLE-VALUE
+         SUP distinguishedName )
+#
+#    Example: "n=5,n=2,ou=OID,ou=X660,dc=example,dc=com"
+#
+# 2.1.23.  'firstArc'
+#
+#    The 'firstArc' attribute type allows for the assignment of an LDAP
+#    DN value to a registration.  The value SHOULD reference the absolute
+#    farthest antecedent sibling registration.
+#
+#    As an example, given a registration for the OID 2.6 (mhs), while
+#    the DN referencing 2.0 (presentation) is the lexically-farthest
+#    antecedent sibling registration.
+#
+#    This OPTIONAL attribute type is among the seven (7) spatial types
+#    discussed in more detail in Section 3.6.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.  This sub type is
+#    MULTI-VALUED so as to support Collective Attribute extensibility
+#    [RFC3671], but is intended only for the storage of a single DN value
+#    per registration.
+#
+attributetype ( x660at:23
+         NAME 'firstArc'
+         DESC 'LDAP Distinguished Name of the farthest
+            lexically antecedent sibling registration'
+         SUP distinguishedName )
+#
+#    Example: "n=0,n=2,ou=OID,ou=X660,dc=example,dc=com"
+#
+# 2.1.24.  'rightArc'
+#
+#    The 'rightArc' attribute type allows for the assignment of an LDAP
+#    DN value to a registration.  The value SHOULD reference the nearest
+#    subsequent sibling registration.
+#
+#    As an example, given a registration for the OID 2.1 (asn1), the DN
+#    referencing OID 2.2 (association-control) is the lexically-nearest
+#    subsequent sibling registration.
+#
+#    This OPTIONAL attribute type is among the seven (7) spatial types
+#    discussed in more detail in Section 3.6.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.
+#
+attributetype ( x660at:24
+         NAME 'rightArc'
+         DESC 'LDAP Distinguished Name of the nearest
+            lexically subsequent sibling registration'
+         SINGLE-VALUE
+         SUP distinguishedName )
+#
+#    Example: "n=2,n=2,ou=OID,ou=X660,dc=example,dc=com"
+#
+# 2.1.25.  'finalArc'
+#
+#    The 'finalArc' attribute type allows for the assignment of an LDAP
+#    DN value to a registration.  The value SHOULD reference the absolute
+#    farthest subsequent sibling registration.
+#
+#    As an example, given a registration for the OID 2.1 (asn1), the DN
+#    referencing OID 2.999 (example) is lexically-farthest subsequent
+#    sibling registration.
+#
+#    This OPTIONAL attribute type is among the seven (7) spatial types
+#    discussed in more detail in Section 3.6.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.  This sub type is
+#    MULTI-VALUED so as to support Collective Attribute extensibility
+#    [RFC3671], but is intended only for the storage of a single DN value
+#    per registration.
+#
+attributetype ( x660at:25
+         NAME 'finalArc'
+         DESC 'LDAP Distinguished Name of the farthest
+            lexically subsequent sibling registration'
+         SUP distinguishedName )
+#
+#    Example: "n=999,n=2,ou=OID,ou=X660,dc=example,dc=com"
+#
+# 2.1.26.  'discloseTo'
+#
+#    The 'discloseTo' attribute type allows for the assignment of one or
+#    more LDAP DN values to a registration, each of which reference an
+#    identity that is authorized to access the entry's information in
+#    read-only fashion.  This MAY cover any depth of subordinate entry
+#    disclosures as seen fit by the directory architect(s).
+#
+#    Identities referenced through use of this attribute type MAY be
+#    single user entries, a 'groupOfNames'-based entry, per Section
+#    3.5 of [RFC4519] or a current authority or sponsorship registrant.
+#
+#    Write-based access SHOULD NOT be governed by this attribute type, as
+#    that is an intended function of the current registration authority.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.
+#
+attributetype ( x660at:26
+         NAME 'discloseTo'
+         DESC 'LDAP Distinguished Names of entries which
+            are granted access to a given registration
+            and its immediate children'
+         SUP distinguishedName )
+#
+#    Example: "cn=ClearanceLevel4,ou=Groups,dc=example,dc=com"
+#
+# 2.1.27.  'registrantID'
+#
+#    The 'registrantID' attribute type is intended to allow for singular
+#    assignment of a UUID, GUID or some other auto-generated value to a
+#    registrant entry.  When used, this value would act as an absolute
+#    identifier for registration entries that may change in the future.
+#
+#    In larger, more complete implementations of this specification, it
+#    is RECOMMENDED that this attribute type be the primary identifier
+#    (or, RDN) for registrant entries.  This allows for an absolute and
+#    unambiguous reference to any registration entry by DN in terms of
+#    authority and/or sponsorship.
+#
+attributetype ( x660at:27
+        NAME 'registrantID'
+        DESC 'GUID or UUID assigned to a past
+           or present registration authority
+           or sponsor entry'
+        SINGLE-VALUE
+        EQUALITY octetStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
+#
+#    Examples: "rfc4519", "69118e61-cc02-4c50-bde7-5bdaf4e973e4"
+#
+# 2.1.28.  'currentAuthority'
+#
+#    The 'currentAuthority' attribute type allows for the assignment
+#    of one or more DN values to a registration.
+#
+#    The value(s) of this attribute type are meant to refer to distinct
+#    entries that contain current registrant authority information for
+#    the registration to which it is linked.
+#
+#    This attribute type is only required if registrant information is
+#    not stored within a given registration directly.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.
+#
+attributetype ( x660at:28
+         NAME 'currentAuthority'
          DESC 'LDAP Distinguished Name of an entry
             bearing current registration authority
             information'
-         EQUALITY distinguishedNameMatch
-         SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
+         SUP distinguishedName )
 #
-#    Example:
+#    Example: "registrantID=XYZ,ou=Registrants,ou=X660,dc=example,dc=com"
 #
-#     currentRegAuthority: arcRegId=4ab9c766-a875-4045-8df2-d450
-#         5193cca5,ou=Registry,ou=X660,dc=example,dc=com
+# 2.1.29.  'currentAuthorityStartTimestamp'
 #
-# 2.1.15.  'currentRegAuthorityStartTimestamp'
+#    The 'currentAuthorityStartTimestamp' attribute type allows for the
+#    assignment of a generalized timestamp value to a current registration
+#    authority, indicative of the date and time at which the current
+#    registration authority was, or will be, officiated.
 #
-#    The 'currentRegAuthorityStartTimestamp' attribute type allows
-#    for the assignment of a generalized timestamp value to a current
-#    registration authority, indicative of the date and time at which
-#    the current registration authority was, or will be, officiated.
-#
-attributetype ( x660at:15
-        NAME 'currentRegAuthorityStartTimestamp'
-        DESC 'Generalized timestamp indicating the date
+attributetype ( x660at:29
+        NAME 'currentAuthorityStartTimestamp'
+        DESC 'Generalized time stamp indicating the date
            and time at which current authority commenced'
         EQUALITY generalizedTimeMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
 #
-#    Example:
+#    Example: "19951231115959Z"
 #
-#     currentRegAuthorityStartTimestamp: 20130105135904Z
+# 2.1.30.  'currentAuthorityCommonName'
 #
-# 2.1.16.  'currentRegAuthorityCommonName'
-#
-#    The 'currentRegAuthorityCommonName' attribute type allows for the
-#    assignment of a common name to a current registration authority
-#    entry.
+#    The 'currentAuthorityCommonName' attribute type allows for the
+#    assignment of a common name to a current authority entry.
 #
 #    The attribute type 'cn', as defined in Section 2.3 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:16
-        NAME 'currentRegAuthorityCommonName'
+attributetype ( x660at:30
+        NAME 'currentAuthorityCommonName'
         DESC 'Common Name assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP cn )
 #
-#    Example:
+#    Example: "Jesse Coretta", "Jane Smith"
 #
-#     currentRegAuthorityCommonName: Jesse Coretta
+# 2.1.31.  'currentAuthorityCountryCode'
 #
-# 2.1.17.  'currentRegAuthorityCountryCode'
-#
-#    The 'currentRegAuthorityCountryCode' attribute type allows for the
-#    assignment of a country code to a current registration authority
-#    entry.
+#    The 'currentAuthorityCountryCode' attribute type allows for the
+#    assignment of a country code to a current authority entry.
 #
 #    The attribute type 'c', as defined in Section 2.2 of [RFC4519], is
 #    a super type of this attribute type.
 #
-attributetype ( x660at:17
-        NAME 'currentRegAuthorityCountryCode'
+attributetype ( x660at:31
+        NAME 'currentAuthorityCountryCode'
         DESC 'Country Code assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP c )
 #
-#    Example:
+#    Examples: "US", "CA"
 #
-#     currentRegAuthorityCountry: US
+# 2.1.32.  'currentAuthorityCountryName'
 #
-# 2.1.18.  'currentRegAuthorityCountryName'
-#
-#    The 'currentRegAuthorityCountryName' attribute type allows for the
-#    assignment of a country name to a current registration authority
-#    entry.
+#    The 'currentAuthorityCountryName' attribute type allows for the
+#    assignment of a country name to a current authority entry.
 #
 #    The attribute type 'co', as defined in Section 2.4 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:18
-        NAME 'currentRegAuthorityCountryName'
+attributetype ( x660at:32
+        NAME 'currentAuthorityCountryName'
         DESC 'Country name assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP co )
 #
-#    Example:
+#    Examples: "United States", "Canada"
 #
-#     currentRegAuthorityCountryName: United States
+# 2.1.33.  'currentAuthorityEmail'
 #
-# 2.1.19.  'currentRegAuthorityEmail'
-#
-#    The 'currentRegAuthorityEmail' attribute type allows for the
-#    assignment of an email address to the current registration
-#    authority entry.
+#    The 'currentAuthorityEmail' attribute type allows for the assignment
+#    of an email address to the current registration authority entry.
 #
 #    The attribute type 'mail', as defined in Section 2.16 of [RFC4524],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:19
-        NAME 'currentRegAuthorityEmail'
+attributetype ( x660at:33
+        NAME 'currentAuthorityEmail'
         DESC 'Email address assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP mail )
 #
-#    Example:
+#    Example: "jesse.coretta@icloud.com"
 #
-#     currentRegAuthorityEmail: jesse.coretta@icloud.com
+# 2.1.34.  'currentAuthorityFax'
 #
-# 2.1.20.  'currentRegAuthorityFax'
-#
-#    The 'currentRegAuthorityFax' attribute type allows for the assignment
-#    of a facsimile telephone number to a current registration authority
-#    entry.
+#    The 'currentAuthorityFax' attribute type allows for the assignment
+#    of a facsimile telephone number to a current authority entry.
 #
 #    The attribute type 'facsimileTelephoneNumber', as defined in Section
 #    2.10 of [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:20
-        NAME 'currentRegAuthorityFax'
+attributetype ( x660at:34
+        NAME 'currentAuthorityFax'
         DESC 'Facsimile telephone number assigned to
            a current registration authority entry'
         SINGLE-VALUE
         SUP facsimileTelephoneNumber )
 #
-#    Example:
+#    Example: "+11234567890"
 #
-#     currentRegAuthorityFax: +11234567890
+# 2.1.35.  'currentAuthorityLocality'
 #
-# 2.1.21.  'currentRegAuthorityLocality'
-#
-#    The 'currentRegAuthorityLocality' attribute type allows for the
-#    assignment of a locality name to a current registration authority
-#    entry.
+#    The 'currentAuthorityLocality' attribute type allows for the
+#    assignment of a locality name to a current authority entry.
 #
 #    The attribute type 'l', as defined in Section 2.16 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:21
-        NAME 'currentRegAuthorityLocality'
+attributetype ( x660at:35
+        NAME 'currentAuthorityLocality'
         DESC 'Locality name assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP l )
 #
-#    Example:
+#    Example: "Palm Springs", "Anna Maria Island"
 #
-#     currentRegAuthorityLocality: Palm Springs
+# 2.1.36.  'currentAuthorityMobile'
 #
-# 2.1.22.  'currentRegAuthorityMobile'
-#
-#    The 'currentRegAuthorityMobile' attribute type allows for the
+#    The 'currentAuthorityMobile' attribute type allows for the
 #    assignment of a mobile telephone number to a current registration
 #    authoritative entry.
 #
 #    The attribute type 'mobile', as defined in Section 2.18 of [RFC4524],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:22
-        NAME 'currentRegAuthorityMobile'
+attributetype ( x660at:36
+        NAME 'currentAuthorityMobile'
         DESC 'Mobile telephone number assigned to a
            current registration authority entry'
         SINGLE-VALUE
         SUP mobile )
 #
-#    Example:
+#    Example: "+11234567890"
 #
-#     currentRegAuthorityMobile: +11234567890
+# 2.1.37.  'currentAuthorityOrg'
 #
-# 2.1.23.  'currentRegAuthorityOrg'
-#
-#    The 'currentRegAuthorityOrg' attribute type allows for the assignment
-#    of an organization name to a current registration authority entry.
+#    The 'currentAuthorityOrg' attribute type allows for the assignment
+#    of an organization name to a current authority entry.
 #
 #    The attribute type 'o', as defined in Section 2.19 of [RFC4519], is
 #    a super type of this attribute type.
 #
-attributetype ( x660at:23
-        NAME 'currentRegAuthorityOrg'
+attributetype ( x660at:37
+        NAME 'currentAuthorityOrg'
         DESC 'Organization name assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP o )
 #
-#    Example:
+#    Example: "Acme, Co."
 #
-#     currentRegAuthorityOrg: Acme, Co.
+# 2.1.38.  'currentAuthorityPOBox'
 #
-# 2.1.24.  'currentRegAuthorityPOBox'
-#
-#    The 'currentRegAuthorityPOBox' attribute type allows for the
+#    The 'currentAuthorityPOBox' attribute type allows for the
 #    assignment of a post office box number to a current registration
 #    authority entry.
 #
 #    The attribute type 'postOfficeBox', as defined in Section 2.25 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:24
-        NAME 'currentRegAuthorityPOBox'
+attributetype ( x660at:38
+        NAME 'currentAuthorityPOBox'
         DESC 'Post office box number assigned to a
            current registration authority entry'
         SINGLE-VALUE
         SUP postOfficeBox )
 #
-#    Example:
+#    Examples: "555", "475"
 #
-#     currentRegAuthorityPOBox: 555
+# 2.1.39.  'currentAuthorityPostalAddress'
 #
-# 2.1.25.  'currentRegAuthorityPostalAddress'
-#
-#    The 'currentRegAuthorityPostalAddress' attribute type allows for the
+#    The 'currentAuthorityPostalAddress' attribute type allows for the
 #    assignment of a complete postal address to a current registration
 #    authority entry.  This single attribute may be used instead of other
 #    individual address component attribute types, but will require field
-#    parsing.
+#    parsing on the client side.
 #
 #    The attribute type 'postalAddress', as defined in Section 2.23 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:25
-        NAME 'currentRegAuthorityPostalAddress'
+attributetype ( x660at:39
+        NAME 'currentAuthorityPostalAddress'
         DESC 'Full postal address assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP postalAddress )
 #
-#    Example:
+#    Example: "1 Fake St$Anytown$CA$12345$US"
 #
-#     currentRegAuthorityPostalAddress: 1 Fake St$Anytown$
-#         CA$12345$US
+# 2.1.40.  'currentAuthorityPostalCode'
 #
-# 2.1.26.  'currentRegAuthorityPostalCode'
-#
-#    The 'currentRegAuthorityPostalCode' attribute type allows for the
-#    assignment of a postal code to a current registration authority
-#    entry.
+#    The 'currentAuthorityPostalCode' attribute type allows for the
+#    assignment of a postal code to a current authority entry.
 #
 #    The attribute type 'postalCode', as defined in Section 2.23 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:26
-        NAME 'currentRegAuthorityPostalCode'
+attributetype ( x660at:40
+        NAME 'currentAuthorityPostalCode'
         DESC 'Postal code assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP postalCode )
 #
-#    Example:
+#       Examples: "92262", "34216"
 #
-#     currentRegAuthorityPostalCode: 92262
+# 2.1.41.  'currentAuthorityState'
 #
-# 2.1.27.  'currentRegAuthorityState'
-#
-#    The 'currentRegAuthorityState' attribute type allows for the
+#    The 'currentAuthorityState' attribute type allows for the
 #    assignment of a state or province name to a current registration
 #    authority entry.
 #
 #    The attribute type 'st', as defined in Section 2.33 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:27
-        NAME 'currentRegAuthorityState'
+attributetype ( x660at:41
+        NAME 'currentAuthorityState'
         DESC 'State or province name assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP st )
 #
-#    Example:
+#    Examples: "California", "North Dakota"
 #
-#     currentRegAuthorityState: California
+# 2.1.42.  'currentAuthorityStreet'
 #
-# 2.1.28.  'currentRegAuthorityStreet'
-#
-#    The 'currentRegAuthorityStreet' attribute type allows for the
+#    The 'currentAuthorityStreet' attribute type allows for the
 #    assignment of a street name and number to a current registration
 #    authority entry.
 #
 #    The attribute type 'street', as defined in Section 2.34 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:28
-        NAME 'currentRegAuthorityStreet'
+attributetype ( x660at:42
+        NAME 'currentAuthorityStreet'
         DESC 'Street name and number assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP street )
 #
-#    Example:
+#    Example: "1 Fake Street"
 #
-#     currentRegAuthorityStreet: 1 Fake Street
+# 2.1.43.  'currentAuthorityTelephone'
 #
-# 2.1.29.  'currentRegAuthorityTelephone'
-#
-#    The 'currentRegAuthorityTelephone' attribute type allows for the
-#    assignment of a telephone number to a current registration authority
-#    entry.
+#    The 'currentAuthorityTelephone' attribute type allows for the
+#    assignment of a telephone number to a current authority entry.
 #
 #    The attribute type 'telephoneNumber', as defined in Section 2.35 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:29
-        NAME 'currentRegAuthorityTelephone'
+attributetype ( x660at:43
+        NAME 'currentAuthorityTelephone'
         DESC 'Telephone number assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP telephoneNumber )
 #
-#    Example:
+#    Example: "+11234567890"
 #
-#     currentRegAuthorityTelephone: +11234567890
+# 2.1.44.  'currentAuthorityTitle'
 #
-# 2.1.30.  'currentRegAuthorityTitle'
-#
-#    The 'currentRegAuthorityTitle' attribute type allows for the
+#    The 'currentAuthorityTitle' attribute type allows for the
 #    assignment of an official or professional title to a current
-#    registration authority entry.
+#    authority entry.
 #
 #    The attribute type 'title', as defined in Section 2.38 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:30
-        NAME 'currentRegAuthorityTitle'
+attributetype ( x660at:44
+        NAME 'currentAuthorityTitle'
         DESC 'Title assigned to a current
            registration authority entry'
         SINGLE-VALUE
         SUP title )
 #
-#    Example:
+#    Example: "Chief Engineer"
 #
-#     currentRegAuthorityTitle: Chief Engineer
+# 2.1.45.  'currentAuthorityURI'
 #
-# 2.1.31.  'currentRegAuthorityURI'
-#
-#    The 'currentRegAuthorityURI' attribute type allows for the
+#    The 'currentAuthorityURI' attribute type allows for the
 #    assignment of one or more URI values, with optional labels,
-#    to a current registration authority entry.
+#    to a current authority entry.
 #
 #    The attribute type 'labeledURI', as defined in [RFC2079], is
 #    a super type of this attribute type.
 #
-attributetype ( x660at:31
-        NAME 'currentRegAuthorityURI'
+attributetype ( x660at:45
+        NAME 'currentAuthorityURI'
         DESC 'URI, with an optional label, leading
            to a resource related to a current
            registration authority'
         SUP labeledURI )
 #
-#    Example:
+#    Example: "http://example.com Example", "http://example.com"
 #
-#     currentRegAuthorityURI: http://www.example.com
+# 2.1.46.  'firstAuthority'
 #
-# 2.1.32.  'firstRegAuthority'
-#
-#    The 'firstRegAuthority' attribute type allows for the assignment
-#    of one or more DN values to an arc entry.
+#    The 'firstAuthority' attribute type allows for the assignment
+#    of one or more DN values to an registration entry.
 #
 #    The value(s) of this attribute type are meant to refer to distinct
-#    entries that contains previous registration authority information
-#    for the indicated arc.
+#    entries that contain previous authority information.
 #
-#    This attribute type is only required if such information is not
-#    stored within a given arc entry directly.
+#    This attribute type is only required if registrant information is
+#    not stored within a given registration directly.
 #
-attributetype ( x660at:32
-         NAME 'firstRegAuthority'
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.
+#
+attributetype ( x660at:46
+         NAME 'firstAuthority'
          DESC 'LDAP Distinguished Name of an entry
             bearing previous registration authority
             information'
-         EQUALITY distinguishedNameMatch
-         SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
+         SUP distinguishedName )
 #
-#    Example:
+#    Example: "registrantID=XYZ,ou=Registrants,ou=X660,dc=example,dc=com"
 #
-#     firstRegAuthority: arcRegId=4fb7ca10-b100-b33f-aee1-e101
-#         1261ae79,ou=Registry,ou=X660,dc=example,dc=com
+# 2.1.47.  'firstAuthorityStartTimestamp'
 #
-# 2.1.33.  'firstRegAuthorityStartTimestamp'
-#
-#    The 'firstRegAuthorityStartTimestamp' attribute type allows for
+#    The 'firstAuthorityStartTimestamp' attribute type allows for
 #    the assignment of a generalized timestamp value to a previous
 #    registration authority, indicative of the date and time at which
 #    the previous registration authority was, or will be, officiated.
 #
-attributetype ( x660at:33
-        NAME 'firstRegAuthorityStartTimestamp'
+attributetype ( x660at:47
+        NAME 'firstAuthorityStartTimestamp'
         DESC 'Generalized timestamp indicating the date and
            time at which a previous registration authority
            commenced'
         EQUALITY generalizedTimeMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
 #
-#    Example:
+#    Example: "20130105135904Z"
 #
-#     firstRegAuthorityStartTimestamp: 20130105135904Z
+# 2.1.48.  'firstAuthorityEndTimestamp'
 #
-# 2.1.34.  'firstRegAuthorityEndTimestamp'
-#
-#    The 'firstRegAuthorityEndTimestamp' attribute type allows for
+#    The 'firstAuthorityEndTimestamp' attribute type allows for
 #    the assignment of a generalized timestamp value to a previous
 #    registration authority, indicative of the date and time at which
 #    an entity's authoritative role was, or will be, terminated.
 #
-attributetype ( x660at:34
-        NAME 'firstRegAuthorityEndTimestamp'
+attributetype ( x660at:48
+        NAME 'firstAuthorityEndTimestamp'
         DESC 'Generalized timestamp indicating the date and
            time at which a previous registration authority
            terminated'
         EQUALITY generalizedTimeMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
 #
-#    Example:
+#    Example: "20170528110555Z"
 #
-#     firstRegAuthorityEndTimestamp: 20170528110555Z
+# 2.1.49.  'firstAuthorityCommonName'
 #
-# 2.1.35.  'firstRegAuthorityCommonName'
-#
-#    The 'firstRegAuthorityCommonName' attribute type allows for the
+#    The 'firstAuthorityCommonName' attribute type allows for the
 #    assignment of a common name to a previous registration authority
 #    entry.
 #
 #    The attribute type 'cn', as defined in Section 2.3 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:35
-        NAME 'firstRegAuthorityCommonName'
+attributetype ( x660at:49
+        NAME 'firstAuthorityCommonName'
         DESC 'Common Name assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP cn )
 #
-#    Example:
+#    Examples: "Jesse Coretta", "Jane Smith"
 #
-#     firstRegAuthorityCommonName: Jesse Coretta
+# 2.1.50.  'firstAuthorityCountryCode'
 #
-# 2.1.36.  'firstRegAuthorityCountryCode'
-#
-#    The 'firstRegAuthorityCountryCode' attribute type allows for the
+#    The 'firstAuthorityCountryCode' attribute type allows for the
 #    assignment of a country code to a previous registration authority
 #    entry.
 #
 #    The attribute type 'c', as defined in Section 2.2 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:36
-        NAME 'firstRegAuthorityCountryCode'
+attributetype ( x660at:50
+        NAME 'firstAuthorityCountryCode'
         DESC 'Country Code assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP c )
 #
-#    Example:
+#    Examples: "US", "CA"
 #
-#     firstRegAuthorityCountry: US
+# 2.1.51.  'firstAuthorityCountryName'
 #
-# 2.1.37.  'firstRegAuthorityCountryName'
-#
-#    The 'firstRegAuthorityCountryName' attribute type allows for the
+#    The 'firstAuthorityCountryName' attribute type allows for the
 #    assignment of a country name to a previous registration authority
 #    entry.
 #
 #    The attribute type 'co', as defined in Section 2.4 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:37
-        NAME 'firstRegAuthorityCountryName'
+attributetype ( x660at:51
+        NAME 'firstAuthorityCountryName'
         DESC 'Country name assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP co )
 #
-#    Example:
+#    Examples: "United States", "Canada"
 #
-#     firstRegAuthorityCountryName: United States
+# 2.1.52.  'firstAuthorityEmail'
 #
-# 2.1.38.  'firstRegAuthorityEmail'
-#
-#    The 'firstRegAuthorityEmail' attribute type allows for the assignment
+#    The 'firstAuthorityEmail' attribute type allows for the assignment
 #    of an email address to a previous registration authority entry.
 #
 #    The attribute type 'mail', as defined in Section 2.16 of [RFC4524],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:38
-        NAME 'firstRegAuthorityEmail'
+attributetype ( x660at:52
+        NAME 'firstAuthorityEmail'
         DESC 'Email address assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP mail )
 #
-#    Example:
+#    Example: "jesse.coretta@icloud.com"
 #
-#     firstRegAuthorityEmail: jesse.coretta@icloud.com
+# 2.1.53.  'firstAuthorityFax'
 #
-# 2.1.39.  'firstRegAuthorityFax'
-#
-#    The 'firstRegAuthorityFax' attribute type allows for the assignment
-#    of a facsimile telephone number to a previous registration authority
+#    The 'firstAuthorityFax' attribute type allows for the assignment of
+#    a facsimile telephone number to a previous registration authority
 #    entry.
 #
 #    The attribute type 'facsimileTelephoneNumber', as defined in Section
 #    2.10 of [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:39
-        NAME 'firstRegAuthorityFax'
+attributetype ( x660at:53
+        NAME 'firstAuthorityFax'
         DESC 'Facsimile telephone number assigned to
            a previous registration authority entry'
         SINGLE-VALUE
         SUP facsimileTelephoneNumber )
 #
-#    Example:
+#    Example: "+11234567890"
 #
-#     firstRegAuthorityFax: +11234567890
+# 2.1.54.  'firstAuthorityLocality'
 #
-# 2.1.40.  'firstRegAuthorityLocality'
-#
-#    The 'firstRegAuthorityLocality' attribute type allows for the
+#    The 'firstAuthorityLocality' attribute type allows for the
 #    assignment of a locality name to a previous registration authority
 #    entry.
 #
 #    The attribute type 'l', as defined in Section 2.16 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:40
-        NAME 'firstRegAuthorityLocality'
+attributetype ( x660at:54
+        NAME 'firstAuthorityLocality'
         DESC 'Locality name assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP l )
 #
-#    Example:
+#    Examples: "Palm Springs", "Anna Maria Island"
 #
-#     firstRegAuthorityLocality: Palm Springs
+# 2.1.55.  'firstAuthorityMobile'
 #
-# 2.1.41.  'firstRegAuthorityMobile'
-#
-#    The 'firstRegAuthorityMobile' attribute type allows for the
-#    assignment of a mobile telephone number to a previous registration
-#    authoritative entry.
+#    The 'firstAuthorityMobile' attribute type allows for the assignment
+#    of a mobile telephone number to a previous registration authoritative
+#    entry.
 #
 #    The attribute type 'mobile', as defined in Section 2.18 of [RFC4524],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:41
-        NAME 'firstRegAuthorityMobile'
+attributetype ( x660at:55
+        NAME 'firstAuthorityMobile'
         DESC 'Mobile telephone number assigned to a
            previous registration authority entry'
         SINGLE-VALUE
         SUP mobile )
 #
-#    Example:
+#    Example: "+11234567890"
 #
-#     firstRegAuthorityMobile: +11234567890
+# 2.1.56.  'firstAuthorityOrg'
 #
-# 2.1.42.  'firstRegAuthorityOrg'
-#
-#    The 'firstRegAuthorityOrg' attribute type allows for the assignment
+#    The 'firstAuthorityOrg' attribute type allows for the assignment
 #    of an organization name to a previous registration authority entry.
 #
 #    The attribute type 'o', as defined in Section 2.19 of [RFC4519], is
 #    a super type of this attribute type.
 #
-attributetype ( x660at:42
-        NAME 'firstRegAuthorityOrg'
+attributetype ( x660at:56
+        NAME 'firstAuthorityOrg'
         DESC 'Organization name assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP o )
 #
-#    Example:
+#    Example: "Acme, Co."
 #
-#     firstRegAuthorityOrg: Acme, Co.
+# 2.1.57.  'firstAuthorityPOBox'
 #
-# 2.1.43.  'firstRegAuthorityPOBox'
-#
-#    The 'firstRegAuthorityPOBox' attribute type allows for the assignment
+#    The 'firstAuthorityPOBox' attribute type allows for the assignment
 #    of a post office box number to a previous registration authority
 #    entry.
 #
 #    The attribute type 'postOfficeBox', as defined in Section 2.25 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:43
-        NAME 'firstRegAuthorityPOBox'
+attributetype ( x660at:57
+        NAME 'firstAuthorityPOBox'
         DESC 'Post office box number assigned to a
            previous registration authority entry'
         SINGLE-VALUE
         SUP postOfficeBox )
 #
-#    Example:
+#    Examples: "555", "475"
 #
-#     firstRegAuthorityPOBox: 555
+# 2.1.58.  'firstAuthorityPostalAddress'
 #
-# 2.1.44.  'firstRegAuthorityPostalAddress'
-#
-#    The 'firstRegAuthorityPostalAddress' attribute type allows for the
+#    The 'firstAuthorityPostalAddress' attribute type allows for the
 #    assignment of a complete postal address to a previous registration
 #    authority entry.  This single attribute may be used instead of other
 #    individual address component attribute types, but will require field
-#    parsing.
+#    parsing on the client side.
 #
 #    The attribute type 'postalAddress', as defined in Section 2.23 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:44
-        NAME 'firstRegAuthorityPostalAddress'
+attributetype ( x660at:58
+        NAME 'firstAuthorityPostalAddress'
         DESC 'Full postal address assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP postalAddress )
 #
-#    Example:
+#    Example: "1 Fake St$Anytown$CA$12345$US"
 #
-#     firstRegAuthorityPostalAddress: 1 Fake St$Anytown$
-#         CA$12345$US
+# 2.1.59.  'firstAuthorityPostalCode'
 #
-# 2.1.45.  'firstRegAuthorityPostalCode'
-#
-#    The 'firstRegAuthorityPostalCode' attribute type allows for the
+#    The 'firstAuthorityPostalCode' attribute type allows for the
 #    assignment of a postal code to a previous registration authority
 #    entry.
 #
 #    The attribute type 'postalCode', as defined in Section 2.23 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:45
-        NAME 'firstRegAuthorityPostalCode'
+attributetype ( x660at:59
+        NAME 'firstAuthorityPostalCode'
         DESC 'Postal code assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP postalCode )
 #
-#    Example:
+#    Examples: "92262", "34216"
 #
-#     firstRegAuthorityPostalCode: 92262
+# 2.1.60.  'firstAuthorityState'
 #
-# 2.1.46.  'firstRegAuthorityState'
-#
-#    The 'firstRegAuthorityState' attribute type allows for the assignment
+#    The 'firstAuthorityState' attribute type allows for the assignment
 #    of a state or province name to a previous registration authority
 #    entry.
 #
 #    The attribute type 'st', as defined in Section 2.33 of [RFC4519], is
 #    a super type of this attribute type.
 #
-attributetype ( x660at:46
-        NAME 'firstRegAuthorityState'
+attributetype ( x660at:60
+        NAME 'firstAuthorityState'
         DESC 'State or province name assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP st )
 #
-#    Example:
+#    Examples: "California", "North Dakota"
 #
-#     firstRegAuthorityState: California
+# 2.1.61.  'firstAuthorityStreet'
 #
-# 2.1.47.  'firstRegAuthorityStreet'
-#
-#    The 'firstRegAuthorityStreet' attribute type allows for the
+#    The 'firstAuthorityStreet' attribute type allows for the
 #    assignment of a street name and number to a previous registration
 #    authority entry.
 #
 #    The attribute type 'street', as defined in Section 2.34 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:47
-        NAME 'firstRegAuthorityStreet'
+attributetype ( x660at:61
+        NAME 'firstAuthorityStreet'
         DESC 'Street name and number assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP street )
 #
-#    Example:
+#    Example: "1 Fake Street"
 #
-#     firstRegAuthorityStreet: 1 Fake Street
+# 2.1.62.  'firstAuthorityTelephone'
 #
-# 2.1.48.  'firstRegAuthorityTelephone'
-#
-#    The 'firstRegAuthorityTelephone' attribute type allows for the
+#    The 'firstAuthorityTelephone' attribute type allows for the
 #    assignment of a telephone number to a previous registration
 #    authority entry.
 #
 #    The attribute type 'telephoneNumber', as defined in Section 2.35 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:48
-        NAME 'firstRegAuthorityTelephone'
+attributetype ( x660at:62
+        NAME 'firstAuthorityTelephone'
         DESC 'Telephone number assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP telephoneNumber )
 #
-#    Example:
+#    Example: "+11234567890"
 #
-#     firstRegAuthorityTelephone: +11234567890
+# 2.1.63.  'firstAuthorityTitle'
 #
-# 2.1.49.  'firstRegAuthorityTitle'
-#
-#    The 'firstRegAuthorityTitle' attribute type allows for the assignment
+#    The 'firstAuthorityTitle' attribute type allows for the assignment
 #    of an official or professional title to a previous registration
 #    authority entry.
 #
 #    The attribute type 'title', as defined in Section 2.38 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:49
-        NAME 'firstRegAuthorityTitle'
+attributetype ( x660at:63
+        NAME 'firstAuthorityTitle'
         DESC 'Title assigned to a previous
            registration authority entry'
         SINGLE-VALUE
         SUP title )
 #
-#    Example:
+#    Example: "Chief Engineer"
 #
-#     firstRegAuthorityTitle: Chief Engineer
+# 2.1.64.  'firstAuthorityURI'
 #
-# 2.1.50.  'firstRegAuthorityURI'
-#
-#    The 'firstRegAuthorityURI' attribute type allows for the assignment
+#    The 'firstAuthorityURI' attribute type allows for the assignment
 #    of one or more URI values, with optional labels, to a previous
 #    registration authority entry.
 #
 #    The attribute type 'labeledURI', as defined in [RFC2079], is a super
 #    type of this attribute type.
 #
-attributetype ( x660at:50
-        NAME 'firstRegAuthorityURI'
+attributetype ( x660at:64
+        NAME 'firstAuthorityURI'
         DESC 'URI, with an optional label, leading
            to a resource related to a previous
            registration authority'
         SUP labeledURI )
 #
-#    Example:
+#    Examples: "http://example.com Example", "http://example.com"
 #
-#     firstRegAuthorityURI: http://www.example.com
+# 2.1.65.  'sponsor'
 #
-# 2.1.51.  'sponsor'
-#
-#    The 'sponsor' attribute type allows for the assignment
-#    of one or more DN values to an arc entry.
+#    The 'sponsor' attribute type allows for the assignment of one or
+#    more DN values to a registration.
 #
 #    The value(s) of this attribute type are meant to refer to distinct
 #    entries that contains sponsorship-related information for a given
-#    arc.
+#    registration.
 #
 #    This attribute type is only required if such information is not
-#    stored within a given arc entry directly.
+#    stored within a given registration directly.
 #
-attributetype ( x660at:51
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.
+#
+attributetype ( x660at:65
          NAME 'sponsor'
          DESC 'LDAP Distinguished Name of an entry
             bearing sponsorship information'
-         EQUALITY distinguishedNameMatch
-         SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
+         SUP distinguishedName )
 #
-#    Example:
+#    Example: "registrantID=XYZ,ou=Registrants,ou=X660,dc=example,dc=com"
 #
-#     sponsor: arcRegId=1ea6ac09-c200-c11a-c430-c3p0
-#         3211ffff,ou=Registry,ou=X660,dc=example,dc=com
-#
-# 2.1.52.  'sponsorStartTimestamp'
+# 2.1.66.  'sponsorStartTimestamp'
 #
 #    The 'sponsorStartTimestamp' attribute type allows for the assignment
 #    of a generalized timestamp value to a sponsor entry, indicative of
 #    the date and time at which sponsorship was, or will be, officiated.
 #
-attributetype ( x660at:52
+attributetype ( x660at:66
         NAME 'sponsorStartTimestamp'
         DESC 'Generalized timestamp indicating the date
            and time sponsorship commenced'
         EQUALITY generalizedTimeMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
 #
-#    Example:
+#    Example: "20130105135904Z"
 #
-#     sponsorStartTimestamp: 20130105135904Z
-#
-# 2.1.53.  'sponsorEndTimestamp'
+# 2.1.67.  'sponsorEndTimestamp'
 #
 #    The 'sponsorEndTimestamp' attribute type allows for the assignment
 #    of a generalized timestamp value to a sponsor entry, indicative of
 #    the date and time at which sponsorship was, or will be, terminated.
 #
-attributetype ( x660at:53
+attributetype ( x660at:67
         NAME 'sponsorEndTimestamp'
         DESC 'Generalized timestamp indicating the date
            and time sponsorship terminated'
         EQUALITY generalizedTimeMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 )
 #
-#    Example:
+#    Example: "20170528110555Z"
 #
-#     sponsorEndTimestamp: 20170528110555Z
-#
-# 2.1.54.  'sponsorCommonName'
+# 2.1.68.  'sponsorCommonName'
 #
 #    The 'sponsorCommonName' attribute type allows for the assignment
 #    of a common name to a sponsor entry.
@@ -1096,17 +1368,15 @@ attributetype ( x660at:53
 #    The attribute type 'cn', as defined in Section 2.3 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:54
+attributetype ( x660at:68
         NAME 'sponsorCommonName'
         DESC 'Common Name of a sponsor entry'
         SINGLE-VALUE
         SUP cn )
 #
-#    Example:
+#    Example: "Jane Sponsor"
 #
-#     sponsorCommonName: Jane Sponsor
-#
-# 2.1.55.  'sponsorCountryCode'
+# 2.1.69.  'sponsorCountryCode'
 #
 #    The 'sponsorCountryCode' attribute type allows for the assignment of
 #    a two-letter country code to a sponsor entry.
@@ -1114,17 +1384,15 @@ attributetype ( x660at:54
 #    The attribute type 'c', as defined in Section 2.2 of [RFC4519], is a
 #    super type of this attribute type.
 #
-attributetype ( x660at:55
+attributetype ( x660at:69
         NAME 'sponsorCountryCode'
         DESC 'Country code for a sponsor entry'
         SINGLE-VALUE
         SUP c )
 #
-#    Example:
+#    Examples: "US", "CA"
 #
-#     sponsorCountryCode: US
-#
-# 2.1.56.  'sponsorCountryName'
+# 2.1.70.  'sponsorCountryName'
 #
 #    The 'sponsorCountryName' attribute type allows the assignment of a
 #    country name to a sponsor entry.
@@ -1132,17 +1400,15 @@ attributetype ( x660at:55
 #    The attribute type 'co', as defined in Section 2.4 of [RFC4524], is a
 #    super type of this attribute type.
 #
-attributetype ( x660at:56
+attributetype ( x660at:70
         NAME 'sponsorCountryName'
         DESC 'Country name for a sponsor entry'
         SINGLE-VALUE
         SUP co )
 #
-#    Example:
+#    Examples: "United States", "Canada"
 #
-#     sponsorCountryName: United States
-#
-# 2.1.57.  'sponsorEmail'
+# 2.1.71.  'sponsorEmail'
 #
 #    The 'sponsorEmail' attribute type allows for the assignment of an
 #    email address to a sponsor entry.
@@ -1150,17 +1416,15 @@ attributetype ( x660at:56
 #    The attribute type 'mail', as defined in Section 2.16 of [RFC4524],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:57
+attributetype ( x660at:71
         NAME 'sponsorEmail'
         DESC 'Email address for a sponsor entry'
         SINGLE-VALUE
         SUP mail )
 #
-#    Example:
+#    Example: "sponsor@example.com"
 #
-#     sponsorEmail: sponsor@example.com
-#
-# 2.1.58.  'sponsorFax'
+# 2.1.72.  'sponsorFax'
 #
 #    The 'sponsorFax' attribute type allows for the assignment of a
 #    facsimile telephone number to a sponsor entry.
@@ -1168,17 +1432,15 @@ attributetype ( x660at:57
 #    The attribute type 'facsimileTelephoneNumber', as defined in Section
 #    2.10 of [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:58
+attributetype ( x660at:72
         NAME 'sponsorFax'
         DESC 'Facsimile telephone number for a sponsor entry'
         SINGLE-VALUE
         SUP facsimileTelephoneNumber )
 #
-#    Example:
+#    Example: "+11234567890"
 #
-#     sponsorFax: +11234567890
-#
-# 2.1.59.  'sponsorLocality'
+# 2.1.73.  'sponsorLocality'
 #
 #    The 'sponsorLocality' attribute type allows for the assignment
 #    of a locality name to a sponsor entry.
@@ -1186,17 +1448,15 @@ attributetype ( x660at:58
 #    The attribute type 'l', as defined in Section 2.16 of [RFC4519], is
 #    a super type of this attribute type.
 #
-attributetype ( x660at:59
+attributetype ( x660at:73
         NAME 'sponsorLocality'
         DESC 'Locality name for a sponsor entry'
         SINGLE-VALUE
         SUP l )
 #
-#    Example:
+#    Examples: "Palm Springs", "Anna Maria Island"
 #
-#     sponsorLocality: Anytown
-#
-# 2.1.60.  'sponsorMobile'
+# 2.1.74.  'sponsorMobile'
 #
 #    The 'sponsorMobile' attribute type allows for the assignment of
 #    a mobile telephone number to a sponsor entry.
@@ -1204,17 +1464,15 @@ attributetype ( x660at:59
 #    The attribute type 'mobile', as defined in Section 2.18 of
 #    [RFC4524], is a super type of this attribute type.
 #
-attributetype ( x660at:60
+attributetype ( x660at:74
         NAME 'sponsorMobile'
         DESC 'Mobile telephone number for a sponsor entry'
         SINGLE-VALUE
         SUP mobile )
 #
-#    Example:
+#    Example: "+11234567890"
 #
-#     sponsorMobile: +11234567890
-#
-# 2.1.61.  'sponsorOrg'
+# 2.1.75.  'sponsorOrg'
 #
 #    The 'sponsorOrg' attribute type allows for the assignment of an
 #    organization name to a sponsor entry.
@@ -1222,55 +1480,49 @@ attributetype ( x660at:60
 #    The attribute type 'o', as defined in Section 2.19 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:61
+attributetype ( x660at:75
         NAME 'sponsorOrg'
         DESC 'Organization name for a sponsor entry'
         SINGLE-VALUE
         SUP o )
 #
-#    Example:
+#    Example: "Sponsor, Co."
 #
-#     sponsorOrg: Sponsor Co.
-#
-# 2.1.62.  'sponsorPOBox'
+# 2.1.76.  'sponsorPOBox'
 #
 #    The 'sponsorPOBox' attribute type allows for the assignment of a
 #    post office box number to a sponsor entry.
 #
-#    Thie attribute type 'postOfficeBox', as defined in Section 2.25 of
+#    The attribute type 'postOfficeBox', as defined in Section 2.25 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:62
+attributetype ( x660at:76
         NAME 'sponsorPOBox'
         DESC 'Post office box number for a sponsor entry'
         SINGLE-VALUE
         SUP postOfficeBox )
 #
-#    Example:
+#    Examples: "555", "475"
 #
-#     sponsorPOBox: 1255
-#
-# 2.1.63.  'sponsorPostalAddress'
+# 2.1.77.  'sponsorPostalAddress'
 #
 #    The 'sponsorPostalAddress' attribute type allows for the assignment
 #    of a complete postal address sponsor entry. This single attribute
 #    may be used instead of other individual address component attribute
-#    types, but will require field parsing.
+#    types, but will require field parsing on the client side.
 #
 #    The attribute type 'postalAddress', as defined in Section 2.23 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:63
+attributetype ( x660at:77
         NAME 'sponsorPostalAddress'
         DESC 'Full postal address for a sponsor entry'
         SINGLE-VALUE
         SUP postalAddress )
 #
-#    Example:
+#    Example: "1 Fake St$Anytown$CA$12345$US"
 #
-#     sponsorPostalAddress: 1 Fake St$Anytown$CA$12345$US
-#
-# 2.1.64.  'sponsorPostalCode'
+# 2.1.78.  'sponsorPostalCode'
 #
 #    The 'sponsorPostalCode' attribute type allows for a postal code
 #    to be assigned to a sponsor entry.
@@ -1278,17 +1530,15 @@ attributetype ( x660at:63
 #    The attribute type 'postalCode', as defined in Section 2.23 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:64
+attributetype ( x660at:78
         NAME 'sponsorPostalCode'
         DESC 'Postal code for a sponsor entry'
         SINGLE-VALUE
         SUP postalCode )
 #
-#    Example:
+#    Example: "92262", "34216"
 #
-#     sponsorPostalCode: 92262
-#
-# 2.1.65.  'sponsorState'
+# 2.1.79.  'sponsorState'
 #
 #    The 'sponsorState' attribute type allows for the assignment of a
 #    state or province name to a sponsor entry.
@@ -1296,17 +1546,15 @@ attributetype ( x660at:64
 #    The attribute type 'st', as defined in Section 2.33 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:65
+attributetype ( x660at:79
         NAME 'sponsorState'
         DESC 'State or province name for a sponsor entry'
         SINGLE-VALUE
         SUP st )
 #
-#    Example:
+#    Examples: "California", "North Dakota"
 #
-#     sponsorState: California
-#
-# 2.1.66.  'sponsorStreet'
+# 2.1.80.  'sponsorStreet'
 #
 #    The 'sponsorStreet' attribute type allows for the assignment of a
 #    street name and number to a sponsor entry.
@@ -1314,17 +1562,15 @@ attributetype ( x660at:65
 #    The attribute type 'street', as defined in Section 2.34 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:66
+attributetype ( x660at:80
         NAME 'sponsorStreet'
         DESC 'Street name and number for a sponsor entry'
         SINGLE-VALUE
         SUP street )
 #
-#    Example:
+#    Example: "1 Fake Street"
 #
-#     sponsorStreet: 1 Fake Street
-#
-# 2.1.67.  'sponsorTelephone'
+# 2.1.81.  'sponsorTelephone'
 #
 #    The 'sponsorTelephone' attribute type allows for the assignment of
 #    a telephone number to a sponsor entry.
@@ -1332,17 +1578,15 @@ attributetype ( x660at:66
 #    The attribute type 'telephoneNumber', as defined in Section 2.35 of
 #    [RFC4519], is a super type of this attribute type.
 #
-attributetype ( x660at:67
+attributetype ( x660at:81
         NAME 'sponsorTelephone'
         DESC 'Telephone number for a sponsor entry'
         SINGLE-VALUE
         SUP telephoneNumber )
 #
-#    Example:
+#    Example: "+11234567890"
 #
-#     sponsorTelephone: +11234567890
-#
-# 2.1.68.  'sponsorTitle'
+# 2.1.82.  'sponsorTitle'
 #
 #    The 'sponsorTitle' attribute type allows for the assignment of an
 #    official or professional title to a sponsor entry.
@@ -1350,17 +1594,15 @@ attributetype ( x660at:67
 #    The attribute type 'title', as defined in Section 2.38 of [RFC4519],
 #    is a super type of this attribute type.
 #
-attributetype ( x660at:68
+attributetype ( x660at:82
         NAME 'sponsorTitle'
         DESC 'Title for a sponsor entry'
         SINGLE-VALUE
         SUP title )
 #
-#    Example:
+#    Example: "Executive Sponsor"
 #
-#     sponsorTitle: Executive Sponsor
-#
-# 2.1.69.  'sponsorURI'
+# 2.1.83.  'sponsorURI'
 #
 #    The 'sponsorURI' attribute type allows for the assignment of one or
 #    more URI values, each with an optional label, to a sponsor entry.
@@ -1368,102 +1610,227 @@ attributetype ( x660at:68
 #    The attribute type 'labeledURI', as defined in [RFC2079], is a super
 #    type of this attribute type.
 #
-attributetype ( x660at:69
+attributetype ( x660at:83
         NAME 'sponsorURI'
         DESC 'URI, with an optional label, for a
            sponsor entry'
         SUP labeledURI )
 #
-#    Example:
+#    Examples: "http://example.com Example", "http://example.com"
 #
-#     sponsorURI: http://www.example.com Sponsor
+# 2.1.84.  'rARegistrationBase'
+#
+#    The 'rARegistrationBase' attribute type allows for the storage
+#    of an LDAP DN meant to store the location of registration entries
+#    within the DIT. Clients SHOULD expect entries of types x660RootArc
+#    or x660SubArc exactly one (1) level below this DN.
+#
+#    This is primarily used in scenarios where it is desirable for an
+#    application to self-configure for maximum efficiency in terms of
+#    registration location and retrieval.
+#
+#    An ideal location for this attribute type is within the DSA's
+#    RootDSE.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7
+#    of [RFC4519], is a super type of this attribute type.
+#
+attributetype ( x660at:84
+         NAME 'rARegistrationBase'
+         DESC 'LDAP Distinguished Name of the root X.660
+            registration entry storage location in a DIT'
+         SUP distinguishedName )
+#
+#    Example: "ou=OID,ou=X660,dc=example,dc=com"
+#
+# 2.1.85.  'rARegistrantBase'
+#
+#    The 'rARegistrantBase' attribute type allows for the storage of
+#    an LDAP DN referencing the location of registrant (contact) entries
+#    within the DIT. Clients SHOULD expect entries bearing the object
+#    class of 'x660Registrant' exactly one (1) level below this DN.
+#
+#    This is primarily used in scenarios where it is desirable for an
+#    application to self-configure for maximum efficiency in terms of
+#    registrant location, retrieval and management.
+#
+#    An ideal location for this attribute type is within the DSA's
+#    RootDSE.
+#
+#    The attribute type 'distinguishedName', as defined in Section 2.7 of
+#    [RFC4519], is a super type of this attribute type.
+#
+attributetype ( x660at:85
+         NAME 'rARegistrantBase'
+         DESC 'LDAP Distinguished Name of the root X.660
+            registrant entry storage location in a DIT'
+         SUP distinguishedName )
+#
+#    Example: "ou=Registrants,ou=X660,dc=example,dc=com"
+#
+# 2.1.86.  'rADirectoryModel'
+#
+#    The 'rADirectoryModel' attribute type allows for the storage of
+#    of an object identifier meant to declare the structural design of
+#    the DIT content pertaining to this specification.
+#
+#    This is primarily used in scenarios where it is desirable for an
+#    application to self-configure for maximum efficiency in terms of
+#    registration location and retrieval.
+#
+#    The supported values for this attribute type are as follows and
+#    correspond to Sections 3.2 and 3.3 of this specification:
+#
+#      - 1.3.6.1.4.1.56521.101.3.2 (twoDimensional)
+#      - 1.3.6.1.4.1.56521.101.3.3 (threeDimensional)
+#
+#    An ideal location for this attribute type is within the DSA's
+#    RootDSE.
+#
+attributetype ( x660at:86
+         NAME 'rADirectoryModel'
+         DESC 'Object Identifier meant to advertise
+            the directory model governing the storage
+            of X.660 LDAP entries within the DIT'
+         EQUALITY objectIdentifierMatch
+         SINGLE-VALUE
+         SYNTAX 1.3.6.1.4.1.1466.115.121.1.38 )
+#
+#    Example: "1.3.6.1.4.1.56521.101.3.3"
+#
+# 2.1.87.  'rAServiceMail'
+#
+#    The 'rAServiceMail' attribute type allows for the assignment
+#    of an email address to an 'x660DUAConfig' entry for the purpose
+#    of email-based RA request handling or error reporting.
+#
+#    The attribute type 'mail', as defined in Section 2.16 of [RFC4524],
+#    is a super type of this attribute type.
+#
+attributetype ( x660at:87
+        NAME 'rAServiceMail'
+        DESC 'Email address used for RA-level
+           registration requests, inquiries or
+           problem reports'
+        SUP mail )
+#
+#    Example: "ra@example.com"
+#
+# 2.1.88.  'rAServiceURI'
+#
+#    The 'rAServiceURI' attribute type allows for the assignment of one
+#    or more URI values to an 'x660DUAConfig' entry for the purpose of
+#    directing users to appropriate RA endpoint for request handling.
+#
+#    The attribute type 'labeledURI', as defined in [RFC2079], is a super
+#    type of this attribute type.
+#
+attributetype ( x660at:88
+        NAME 'rAServiceURI'
+        DESC 'URI, with an optional label, defining
+           an appropriate RA endpoint'
+        SUP labeledURI )
+#
+#    Example: "http://example.com/ra.html Registrations"
 #
 # 2.2.  Object Classes
 #
 #    The following subsections describes LDAP object classes made
 #    available by this specification.
 #
-# 2.2.1.  'x660RootArcEntry'
+# 2.2.1.  'x660RootArc'
 #
-#    The 'x660RootArcEntry' class is meant to define a maximum of three
-#    (3) root arcs within a DIT, per Rec. ITU-T X.660 (ISO/IEC 9834-1).
+#    The 'x660RootArc' class is meant to define a maximum of three (3)
+#    root registrations within a DIT, per Rec. ITU-T X.660 (ISO/IEC
+#    9834-1).
 #
 objectclass ( x660oc:1
-         NAME 'x660RootArcEntry'
+         NAME 'x660RootArc'
          DESC 'Top-level class for entries meant to represent
             ITU-T, ISO or Joint-ISO-ITU-T root arcs as defined
             in Section A.2 of the X.660 specification'
-         SUP top
-         STRUCTURAL
-         MUST ( n $ unicodeValue )
-         MAY ( identifier $ firstRegAuthority $ arcURI $
-               arcCreateTimestamp $ arcModifyTimestamp $
-               arcInformation $ additionalIdentifier $
-               additionalIdentifier $ asn1Notation $
-               currentRegAuthority $ sponsor $
-               description ) )
+         SUP top STRUCTURAL
+         MUST ( n $ unicodeValue $ identifier )
+         MAY ( registrationInformation $ additionalIdentifier $
+               asn1Notation $ iRI $ currentAuthority $ subArc $
+               stdNameForm $ description $ registrationURI $
+               registrationCreated $ registrationModified $
+               leftArc $ rightArc $ nameAndNumberForm $
+               firstAuthority ) )
 #
-# 2.2.2.  'x660SubArcEntry'
+# 2.2.2.  'x660SubArc'
 #
-#    The 'x660SubArcEntry' object class makes a collection of attribute
-#    types available for use when crafting sub arc entries within a DIT.
+#    The 'x660SubArc' object class makes a collection of attribute
+#    types available for use when crafting subordinate registrations
+#    within a DIT.
 #
 objectclass ( x660oc:2
-         NAME 'x660SubArcEntry'
-         DESC 'A generalized class meant to represent
-            subordinate arcs beneath any root, as defined
-            in X.660 Sections A.3-A.5'
-         SUP top
-         STRUCTURAL
+         NAME 'x660SubArc'
+         DESC 'A generalized class meant to represent sub arcs
+            beneath any root, as defined in X.660 Sections A.3-A.5'
+         SUP top STRUCTURAL
          MUST ( n )
-         MAY ( asn1Notation $ iRI $ dottedNotation $
-               unicodeValue $ currentRegAuthority $
-               firstRegAuthority $ arcInformation $
-               identifier $ additionalIdentifier $
-               arcModifyTimestamp $ sponsor $
-               longArc $ arcCreateTimestamp $
-               description $ arcURI ) )
+         MAY ( nameAndNumberForm $ firstAuthority $ finalArc $
+               currentAuthority $ supArc $ subArc $ firstArc $
+               topArc $ description $ registrationURI $ iRI $
+               isFrozen $ discloseTo $ sponsor $ isLeafNode $
+               leftArc $ rightArc $ registrationInformation $
+               additionalIdentifier $ registrationCreated $
+               unicodeValue $ longArc $ registrationRange $
+               registrationModified $ registrationStatus $
+               identifier $ stdNameForm $ asn1Notation $
+               dotNotation ) )
 #
-# 2.2.3.  'x660ContactEntry'
+# 2.2.3.  'x660Registrant'
 #
-#    The 'x660ContactEntry' object class allows for current, previous
-#    (first) and/or sponsorship contact information to be stored within
-#    an entry.
-#
-#    In larger, more complete implementations of this specification, it
-#    is RECOMMENDED that registration data be stored in dedicated entries
-#    that bear this class.  In contrast, sparse implementations MAY opt
-#    to assign this class directly to entries bearing 'x660RootArcEntry'
-#    and 'x660SubArcEntry' object classes, though this is not required.
+#    The 'x660Registrant' object class allows for current, previous
+#    (first) and/or sponsorship  data to be stored within an entry.
 #
 objectclass ( x660oc:3
-         NAME 'x660ContactEntry'
-         DESC 'A generalized auxiliary class for arc
-            registration contact information'
-         SUP top
-         AUXILIARY
-         MAY ( currentRegAuthorityCommonName $ firstRegAuthorityMobile $
-               currentRegAuthorityTitle $ firstRegAuthorityCountryCode $
-               currentRegAuthorityPostalAddress $ firstRegAuthorityOrg $
-               currentRegAuthorityFax $ firstRegAuthorityPostalAddress $
-               currentRegAuthorityURI $ sponsorCommonName $ sponsorOrg $
-               currentRegAuthorityCountryCode $ firstRegAuthorityState $
-               currentRegAuthorityCountryName $ firstRegAuthorityEmail $
-               currentRegAuthorityMobile $ firstRegAuthorityCommonName $
-               firstRegAuthorityPOBox $ sponsorPOBox $ sponsorLocality $
-               firstRegAuthorityCountryName $ currentRegAuthorityState $
-               sponsorStreet $ sponsorMobile $ sponsorState $ arcRegId $
-               sponsorPostalCode $ sponsorPostalAddress $ sponsorEmail $
-               currentRegAuthorityPostalCode $ firstRegAuthorityStreet $
-               currentRegAuthorityTelephone $ currentRegAuthorityEmail $
-               currentRegAuthorityLocality $ firstRegAuthorityLocality $
-               currentRegAuthorityStreet $ firstRegAuthorityPostalCode $
-               sponsorCountryCode $ firstRegAuthorityURI $ description $
-               firstRegAuthorityStartTimestamp $ sponsorStartTimestamp $
-               firstRegAuthorityFax $ sponsorCountryName $ sponsorURI $
-               sponsorTelephone $ currentRegAuthorityOrg $ sponsorFax $
-               firstRegAuthorityTelephone $ currentRegAuthorityPOBox $
-               firstRegAuthorityEndTimestamp $ sponsorEndTimestamp $
-               currentRegAuthorityStartTimestamp $ sponsorTitle $
-               firstRegAuthorityTitle ) )
+         NAME 'x660Registrant'
+         DESC 'A generalized auxiliary class for
+            registrant contact information'
+         SUP top AUXILIARY
+         MAY ( currentAuthorityURI $ sponsorCommonName $ sponsorOrg $
+               firstAuthorityPOBox $ sponsorPOBox $ sponsorLocality $
+               sponsorCountryCode $ firstAuthorityURI $ description $
+               firstAuthorityStartTimestamp $ sponsorStartTimestamp $
+               firstAuthorityFax $ sponsorCountryName $ sponsorURI $
+               sponsorTelephone $ currentAuthorityOrg $ sponsorFax $
+               currentAuthorityCommonName $ firstAuthorityMobile $
+               currentAuthorityTitle $ firstAuthorityCountryCode $
+               currentAuthorityPostalAddress $ firstAuthorityOrg $
+               currentAuthorityFax $ firstAuthorityPostalAddress $
+               currentAuthorityCountryCode $ firstAuthorityState $
+               currentAuthorityCountryName $ firstAuthorityEmail $
+               currentAuthorityMobile $ firstAuthorityCommonName $
+               firstAuthorityCountryName $ currentAuthorityState $
+               currentAuthorityPostalCode $ firstAuthorityStreet $
+               currentAuthorityTelephone $ currentAuthorityEmail $
+               currentAuthorityLocality $ firstAuthorityLocality $
+               currentAuthorityStreet $ firstAuthorityPostalCode $
+               firstAuthorityTitle $ registrantID $ sponsorEmail $
+               firstAuthorityEndTimestamp $ sponsorEndTimestamp $
+               firstAuthorityTelephone $ currentAuthorityPOBox $
+               currentAuthorityStartTimestamp $ sponsorTitle $
+               sponsorStreet $ sponsorMobile $ sponsorState $
+               sponsorPostalCode $ sponsorPostalAddress ) )
+#
+# 2.2.4.  'x660DUAConfig'
+#
+#    The 'x660DUAConfig' object class allows for the storage of so-called
+#    auto-configuration attribute types meant to guide various DUAs in
+#    their attempt to access registration and/or registrant information
+#    contained within the DIT hosted by the RA DSA.  See Section 3.5 for
+#    details.
+#
+objectclass ( x660oc:4
+         NAME 'x660DUAConfig'
+         DESC 'Entry class to facilitate advertisement
+            of optimal X.660 DUA configuration values'
+         SUP top AUXILIARY
+         MAY ( rADirectoryModel $ rARegistrantBase $
+               rAServiceMail $ rAServiceURI $
+               rARegistrationBase ) )
+#
 #
